@@ -1,4 +1,9 @@
 <div class="wraper">
+
+    <div class="heading-wraper">
+        <h1>R E G I S T E R</h1>
+    </div>
+
     <div class="form-wraper">
     <form [formGroup]="regForm">
         <mat-form-field>
@@ -28,6 +33,10 @@
                     minimum 6 characters
                 </mat-hint> 
             </div>
+
+            <mat-form-field>
+                <input matInput type="email" placeholder="email address" formControlName="email">
+            </mat-form-field>
         <button mat-stroked-button class="submit-button" [disabled]="regForm.invalid" (click)="submitForm()">Submit</button>
     </form>
 </div>

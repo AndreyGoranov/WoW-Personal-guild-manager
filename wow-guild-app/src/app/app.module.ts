@@ -9,12 +9,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoginComponent } from './authentication/login/login.component';
 import { MatButtonModule } from '@angular/material/button';
+import { ProfileComponent } from './profilePannel/profile/profile.component';
+import { EntranceSceneComponent } from './entrance/entrance-scene/entrance-scene.component';
+import { AddChampionComponent } from './profilePannel/add-champion/add-champion/add-champion.component';
+import { MatSelectModule } from '@angular/material/select'
 
 @NgModule({
   declarations: [
     AppComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent,
+    EntranceSceneComponent,
+    AddChampionComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +31,8 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,1 +1,30 @@
-<p>login works!</p>
+<div class="wraper">
+
+    <div class="heading-wraper">
+        <h1>L O G I N</h1>
+    </div>
+
+    <div class="form-wraper">
+    <form [formGroup]="loginForm">
+        <mat-form-field>
+            <input matInput placeholder="username" formControlName="username">
+            <mat-error *ngIf="this.username.invalid && this.username.touched">
+                username length incorrect
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input matInput type="password" placeholder="password" formControlName="password">
+
+            <mat-error  *ngIf="this.password.invalid && this.password.touched">
+                password length incorrect
+            </mat-error>
+   
+        </mat-form-field>
+
+        <button mat-stroked-button class="submit-button" [disabled]="loginForm.invalid" (click)="submitForm()">Login</button>
+
+        <p class="reg-redirect">No account ? Register <span style="color: blue; cursor: pointer;" routerLink="/register">here!</span></p>
+    </form>
+</div>
+</div>

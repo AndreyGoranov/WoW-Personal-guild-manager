@@ -1,0 +1,60 @@
+* {
+    font-family: cursive;
+}
+
+.heading-wraper {
+    font-weight: bold;
+    font-family: cursive;
+    font-size: larger;
+}
+
+.wraper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../../../assets/pictures/world-of-warcraft-classic.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.form-wraper {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    opacity: 99%;
+    opacity: 100%;
+    border-radius: 25px;
+    border: 7px solid black;
+    width: 300px;
+    height: 300px;
+}
+
+.mat-form-field {
+    color: #990000;
+    font-weight: bold;
+    font-family: cursive;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-left: 0.7rem;
+}
+
+.submit-button {
+    width: 120px;
+    margin-top: 1rem;
+    margin-left: 0.7rem;
+    font-weight: bold;
+    font-size: large;
+    cursor: pointer;
+}
+
+.reg-redirect {
+    padding-top: 1rem;
+    padding-left: 0.7rem;
+    font-weight: bold;
+}
+
+.submit-button:hover {
+    background-color: rgb(255, 72, 0);
+}

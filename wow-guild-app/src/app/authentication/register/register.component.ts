@@ -19,6 +19,7 @@ export class RegisterComponent implements OnInit {
     this.regForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      email:['', [Validators.required, Validators.email]]
     })
   }
 
@@ -30,9 +31,13 @@ export class RegisterComponent implements OnInit {
     return this.regForm.get('password');
   }
 
+  get email() {
+    return this.regForm.get('email');
+  }
 
   submitForm() {
-    
+    //async
+    console.log(this.regForm)
   }
   
 }
