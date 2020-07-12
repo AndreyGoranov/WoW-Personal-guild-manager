@@ -2,13 +2,14 @@
     <div class="form-wraper">
 
         <form [formGroup]="addChampion">
+            <!-- NAME -->
                 <mat-form-field appearance="fill">
                     <input matInput placeholder="Name" formControlName="name">
                     <mat-error *ngIf="this.name.invalid && this.name.touched">
                         name is mandatory
                     </mat-error>
                 </mat-form-field>
-
+            <!-- RACE -->
                 <mat-form-field appearance="fill">
                     <mat-label>Race</mat-label>
                     <mat-select [formControl]="race">
@@ -19,18 +20,100 @@
                     </mat-select>
                     <mat-error *ngIf="race.hasError('required')">Please choose a race</mat-error>
                 </mat-form-field>
-                
+                <!-- CLASS -->
                 <mat-form-field appearance="fill">
                     <mat-label>Class</mat-label>
-                    <mat-select [formControl]="champClass">
+                    <mat-select [formControl]="champClass" [disabled]="classSelectDisable()">
                         <mat-option>--</mat-option>
-                        <mat-option *ngFor="let champClass of classes" [value]="champClass">
-                        {{champCLass}}
+                        <mat-option *ngFor="let champClass of classes" [value]="champClass"
+                         [disabled]="classOptionDisable(champClass)">
+                        {{champClass}}
                         </mat-option>
                     </mat-select>
                     <mat-error *ngIf="champClass.hasError('required')">Please choose a class</mat-error>
                 </mat-form-field>
-
+                <!-- SPEC -->
+                <section *ngIf="champClass.value">
+                    <div>What's the spec of your {{champClass.value}} ?</div>
+                    <mat-checkbox  *ngFor="let spec of specs[champClass.value | lowercase]"
+                        [disabled]="this.checkedSpec[spec]"
+                        (change)="getSelectedSpec($event, spec, champClass.value)">
+                        {{spec}}
+                    </mat-checkbox>
+                </section>
+                <!-- LEVEL -->
+                <mat-input-field appearance="fill" *ngIf="champClass.value" class="level-input-wraper">
+                    Level:
+                    <input class="level-input"  matInput  formControlName="level" type="number">
+                    <i *ngIf="this.addChampion.get('level').invalid" 
+                        class="fa fa-exclamation-circle prof-skill-error ml-2"
+                        title="Level must be between 1 and 60">
+                    </i>
+                </mat-input-field>
+                <section *ngIf="champClass.value">
+                    <div>What's the gender of your champion ?</div>
+                    <mat-radio-group aria-label="Select an option">
+                        <mat-radio-button (change)="getSelectedGender('male')" value="1">Male</mat-radio-button>
+                        <mat-radio-button (change)="getSelectedGender('female')" value="2">Female</mat-radio-button>
+                    </mat-radio-group>
+                </section>
+                <!-- PROFESSIONS -->
+                  <mat-expansion-panel (opened)="primaryPanelOpenState = true">
+                    <mat-expansion-panel-header>
+                    <mat-panel-title class="prof-heading">
+                        Select Primary Professions
+                    </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="all-primary-prof-wraper" formGroupName="primaryProfs">
+                        <section class="primary-prof-wraper"  *ngFor="let primaryProf of primaryProfessions">
+                            <mat-checkbox 
+                            [disabled]="this.checkedPrimaryProfessions[primaryProf] !== 'checked' && 
+                            this.professionCounter === 2"
+                            (change)="getSelectedProfessions($event, primaryProf, 'primary')">
+                            {{primaryProf}}
+                            </mat-checkbox>
+                            <mat-input-field class="prof-skill-input-wraper" 
+                            *ngIf="this.checkedPrimaryProfessions[primaryProf] === 'checked' 
+                            || this.addChampion.value[primaryProf]"> 
+                                <input class="prof-skill-input" matInput type="number" placeholder="Enter skill" 
+                                [formControlName]="primaryProf">
+                                <i *ngIf="this.primaryProfsGroup.get(primaryProf).invalid"
+                                 class="fa fa-exclamation-circle prof-skill-error ml-2" title="Max skill is 300"></i> 
+                            </mat-input-field>
+                            
+                        </section>
+                    </div>
+                    
+                </mat-expansion-panel>
+                <!-- SECONDARY -->
+                <mat-expansion-panel (opened)="secondaryPanelOpenState = true"
+                       (closed)="secondaryPanelOpenState = false">
+                    <mat-expansion-panel-header>
+                    <mat-panel-title class="prof-heading">
+                        Select Secondary Professions
+                    </mat-panel-title>
+                    
+                    </mat-expansion-panel-header>
+                    <div formGroupName="secondaryProfs">
+                        <section class="secondary-prof-wraper" *ngFor="let secondaryProf of secondaryProfessions">
+                            <mat-checkbox 
+                            [disabled]="this.secondaryProfessions[secondaryProf]"
+                            (change)="getSelectedProfessions($event, secondaryProf, 'secondary')">
+                            {{secondaryProf}}
+                            </mat-checkbox>
+                            <mat-input-field  class="prof-skill-input-wraper" 
+                                *ngIf="this.checkedSecondaryProfessions[secondaryProf] === 'checked' 
+                                || this.addChampion.value[secondaryProf]"> 
+                                <input class="prof-skill-input" matInput placeholder="Enter skill" [formControlName]="secondaryProf">
+                                <i *ngIf="this.secondaryProfs.get(secondaryProf).invalid"
+                                class="fa fa-exclamation-circle prof-skill-error ml-2" title="Max skill is 300"></i>
+                            </mat-input-field>
+                        </section>
+                    </div>
+                    
+                </mat-expansion-panel>
+                <button class="mt-5" (click)="test()">asd</button>
+                <!-- DONT FORGET TO VALIDATE  FOR SELECTE SPEC  required-->
                 <!-- <button mat-stroked-button class="submit-button" [disabled]="regForm.invalid" (click)="submitForm()">Submit</button> -->
             </form>
 

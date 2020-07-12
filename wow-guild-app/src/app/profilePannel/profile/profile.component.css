@@ -1,4 +1,4 @@
-.person-data {
+/* .person-data {
     display: flex;
     text-align: center;
     flex-direction: column;
@@ -20,19 +20,31 @@
     position: absolute;
     display: none;
 
-}
-.picture-container:hover .add-img {
+} */
+/* .picture-container:hover .add-img {
     display: block;
-}
+} */
 
-.person-champions {
+.user-champions {
     display: flex;
     justify-content: center;
+    flex-direction: column;
+}
+
+.champs-container {
+
+}
+
+.champ-container {
+    background-color: red;
+    margin: 0 5px 0 5px;
 }
 
 .champs-heading {
     display: inline-flex;
+    justify-content: center;
 }
+
 .champs-heading h1 {
     padding-right: 1rem;
     padding-left: 1rem;
@@ -51,3 +63,6 @@
     transform: translateY(5px);  
 }
 
+.champion {
+    background-color: lightblue;
+}

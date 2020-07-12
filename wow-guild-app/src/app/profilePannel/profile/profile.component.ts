@@ -1,4 +1,9 @@
+import { racePictureSelect } from './../../utilities/constants/picture-selectors';
+import { Champion } from './../../interfaces/champion-interface';
 import { Component, OnInit } from '@angular/core';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import * as firebase from "firebase/app";
+
 
 @Component({
   selector: 'app-profile',
@@ -6,13 +11,35 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  constructor() { }
+
+  constructor(private db: AngularFireDatabase) { }
+
   img: File = null;
   imgURL: any;
   message: string;
   email:string;
+  racePictureSelector = racePictureSelect;
+
+  dbRefObject;
+  userId: string;
+  userChampions: Array<Champion> = [];
+  
+
   ngOnInit(): void {
-    
+    this.dbRefObject = firebase.database().ref('champions');
+    this.userId = firebase.auth().currentUser.uid;
+    this.dbRefObject.on('value', snap => this.getChampions(snap.val()));
+  }
+
+  async getChampions(data) {
+    this.userChampions = [];
+    const champions = data[this.userId];
+    console.log(champions);
+    for(let champ in champions) {
+      let currentChampion: Champion  = champions[champ];
+      this.userChampions.push(currentChampion);
+      console.log(currentChampion);
+    }
   }
 
   onFileSelected(event) {

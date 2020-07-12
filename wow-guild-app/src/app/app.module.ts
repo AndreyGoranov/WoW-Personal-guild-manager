@@ -1,8 +1,8 @@
+import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { RegisterComponent } from './authentication/register/register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,12 +12,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { ProfileComponent } from './profilePannel/profile/profile.component';
 import { EntranceSceneComponent } from './entrance/entrance-scene/entrance-scene.component';
 import { AddChampionComponent } from './profilePannel/add-champion/add-champion/add-champion.component';
-import { MatSelectModule } from '@angular/material/select'
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { AngularFireModule } from '@angular/fire'
+import { AngularFireDatabaseModule } from '@angular/fire/database'
+import { AngularFireAuthModule } from '@angular/fire/auth'
+import * as firebase from "firebase/app";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatRadioModule} from '@angular/material/radio';
+
+
+firebase.initializeApp(environment.firebase);
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent,
     LoginComponent,
     ProfileComponent,
     EntranceSceneComponent,
@@ -32,7 +43,15 @@ import { MatSelectModule } from '@angular/material/select'
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    MatCheckboxModule,
+    MatExpansionModule,
+    AngularFireModule.initializeApp(environment.firebase, 'wow-guild-manager'),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule,
+    NgbModule,
+    MatGridListModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 <div class="wraper">
-    <div class="person-data">
+    <!-- <div class="person-data">
         <div class="picture-container">
             <input type="file" id="selectedFile" style="display: none;" (change)="onFileSelected($event)" />
             <span style="color:red;" *ngIf="message">{{message}}</span>
@@ -9,20 +9,40 @@
                 title="Insert image"
              />
         </div>
-        <div class="profile-email">Email: agoranovreff@gmail.com{{this.email}}</div>
-    </div>
+        <div class="profile-email">Email: {{this.email}}</div>
+    </div> -->
     
     <hr/>
-
-    <div class="person-champions">
+    
+    <div class="user-champions">
+        
         <div class="champs-heading">
             <h1>C H A M P I O N S</h1>
-            <img class="add-champion" title="Add Champion"
-             src="https://img.icons8.com/doodle/64/000000/plus--v1.png"
-             routerLink="/add-champion"
+            <img class="add-champion" title="Add Champion" 
+                src="https://img.icons8.com/doodle/64/000000/plus--v1.png"
+                routerLink="/add-champion" 
             />
         </div>
+
+        <div class="container fluid mt-2 champs-container">
+            <div class="row">
+                <div class="col champ-container"  *ngFor="let champ of this.userChampions">
+                    <h2>{{champ.name}}</h2>
+                    <img src={{this.racePictureSelector[champ.gender][(champ.race).toLowerCase()]}} 
+                    style="width: 60px; height: 60px;"/>
+                    <p>{{champ.race}} {{champ.champClass}}</p>
+                    <p>Level: {{champ.level}}</p>
+                    <p>Primary professions:</p>
+                    <div *ngFor="let prof of champ.primaryProfs | keyvalue">
+                        <p>{{prof.key}}: {{prof.value}}</p>
+                    </div>
+                    <p>Secondary professions:</p>
+                    <div *ngFor="let prof of champ.secondaryProfs | keyvalue">
+                        <p>{{prof.key}}: {{prof.value}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
         
-    </div>
     
 </div>

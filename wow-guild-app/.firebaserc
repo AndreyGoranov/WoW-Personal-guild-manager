@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "wow-guild-manager-e5d01": {
+      "hosting": {
+        "wow-guild-app": [
+          "wow-guild-manager-e5d01"
+        ]
+      }
+    }
+  }
+}

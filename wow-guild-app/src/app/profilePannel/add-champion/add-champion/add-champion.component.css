@@ -1,0 +1,63 @@
+.wraper {
+    display: flex;
+    justify-content: center;
+}
+
+.form-wraper form{
+    text-align: center;
+}
+
+mat-panel-title {
+    justify-content: center !important;
+}
+
+.primary-prof-wraper {
+    text-align: start;
+    display: flex;
+}
+
+.secondary-prof-wraper {
+    text-align: start;
+    display: flex;
+}
+
+@media only screen and (min-width: 768px) {
+    .all-primary-prof-wraper {
+        padding-left: 11rem;
+    }
+    .secondary-prof-wraper {
+        padding-left: 10.5rem;
+    }
+}
+
+.level-input-wraper {
+    display: flex;
+    justify-content: center;
+}
+
+.level-input {
+    margin-left: 6px;
+    width: 155px;
+    background-color: rgba(0,0,0,.04);
+}
+
+.prof-skill-input {
+    padding-top: 2.5px;
+    padding-left: 8px;
+    background-color: rgba(0,0,0,.04);
+}
+
+.prof-skill-input-wraper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.prof-skill-error {
+    color: red;
+
+}
+
+.mat-checkbox-layout {
+    margin-bottom: 0;
+}

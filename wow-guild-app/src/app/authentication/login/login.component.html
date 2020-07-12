@@ -1,15 +1,16 @@
 <div class="wraper">
 
     <div class="heading-wraper">
-        <h1>L O G I N</h1>
+        <h1 style="color: white;">L O G I N</h1>
     </div>
-
+    <button mat-raised-button color="primary" (click)="googleLogin()">With GOOGLE</button>
+    <div class="mb-1 mt-1" style="color: white; font-weight: bold;">Or use your email address</div>
     <div class="form-wraper">
     <form [formGroup]="loginForm">
         <mat-form-field>
-            <input matInput placeholder="username" formControlName="username">
-            <mat-error *ngIf="this.username.invalid && this.username.touched">
-                username length incorrect
+            <input matInput placeholder="email" formControlName="email">
+            <mat-error *ngIf="this.email.invalid && this.email.touched">
+                incorrect email address
             </mat-error>
         </mat-form-field>
 
@@ -22,9 +23,8 @@
    
         </mat-form-field>
 
-        <button mat-stroked-button class="submit-button" [disabled]="loginForm.invalid" (click)="submitForm()">Login</button>
-
-        <p class="reg-redirect">No account ? Register <span style="color: blue; cursor: pointer;" routerLink="/register">here!</span></p>
+        <button mat-stroked-button class="submit-button" [disabled]="loginForm.invalid" (click)="emailLogin()">Log In</button>
+        <button mat-stroked-button class="submit-button" [disabled]="loginForm.invalid" (click)="register()">Sign Up</button>
     </form>
 </div>
 </div>

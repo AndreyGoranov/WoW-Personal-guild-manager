@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: "AIzaSyAXNNlsT9z0roFWgnAPb-W9hEYfxm0k6CE",
+    authDomain: "wow-guild-manager-e5d01.firebaseapp.com",
+    databaseURL: "https://wow-guild-manager-e5d01.firebaseio.com",
+    projectId: "wow-guild-manager-e5d01",
+    storageBucket: "wow-guild-manager-e5d01.appspot.com",
+    messagingSenderId: "254360196330",
+    appId: "1:254360196330:web:8258138825d0119933b393",
+    measurementId: "G-DQNNWBDSBL" 
+  }
 };
 
 /*
