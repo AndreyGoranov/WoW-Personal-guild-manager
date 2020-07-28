@@ -1,3 +1,4 @@
+import { Champion } from './../../../interfaces/champion-interface';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
@@ -14,12 +15,7 @@ import * as firebase from "firebase/app";
 export class AddChampionComponent implements OnInit {
   courses: any;
   
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase) {
-    db.list('/courses').valueChanges().subscribe(courses => {
-      this.courses = courses;
-      console.log(this.courses);
-    })
-  }
+  constructor(private fb: FormBuilder, private db: AngularFireDatabase) {}
 
   races: Array<string> = ['Human', 'Dwarf', 'Night elf', 'Orc', 'Undead', 'Tauren', 'Troll'];
   classes: Array<string> = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
@@ -34,41 +30,88 @@ export class AddChampionComponent implements OnInit {
   checkedPrimaryProfessions = {};
   checkedSecondaryProfessions = {};
   professionCounter = 0;
-  primaryProfsGroup: FormGroup;
+  // primaryProfsGroup: FormGroup;
   tests: AngularFireList<string>;
-
+  itemToEdit: Champion;
+  itemId: string;
   userId: string;
   addChampion: FormGroup;
-  
+
   ngOnInit(): void {
     this.userId = firebase.auth().currentUser.uid;
-    console.log(this.userId);
+    if (history.state.data) {
+      this.itemId = history.state.data.id;
+      console.log('from edit button');
+      const itemToEditId = history.state.data.id;
+      console.log('object to edit', itemToEditId);
+      firebase.database().ref(`champions`).child(this.userId).child(itemToEditId).once('value').then(snap => 
+          this.getChampionToEdit(snap.val()).then(champ =>  {this.addChampion = this.fb.group({
+            name: [champ.name, [Validators.required]],
+            race: [champ.race, [Validators.required]],
+            champClass: [champ.champClass, [Validators.required]],
+            spec: [champ.spec, [Validators.required]],
+            level: [champ.level, [Validators.required, Validators.min(1), Validators.max(60)]],
+            gender: [champ.gender , [Validators.required]],
+            primaryProfs: this.fb.group(champ.primaryProfs || {}),
+            secondaryProfs: this.fb.group(champ.secondaryProfs || {}),
+            //TODO Add honor / kills  and rank
+            // ADD Fraction ICON on Champs 
+            // Just came to mind  can make Guild Achivements section =]
+            // Add guild competitions in raids  for time and bosses killed and rankings
+            // Maby add guild relations in the app like  shared data or sth with other guilds trough additional pannel
+          })
+          for (let prof in champ.primaryProfs) {
+            this.professionCounter++;
+            this.checkedPrimaryProfessions[prof] = 'checked';
+            this.primaryProfs.get(prof).setValidators(Validators.max(300));
+          }
+          for (let prof in champ.secondaryProfs) {
+            this.checkedSecondaryProfessions[prof] = 'checked';
+            this.secondaryProfs.get(prof).setValidators(Validators.max(300));
+          }
+        })
+        
+      )
 
-    this.addChampion = this.fb.group({
-      name: ['', [Validators.required]],
-      race: ['', [Validators.required]],
-      champClass:['', [Validators.required]],
-      spec: ['', [Validators.required]],
-      level:['1', [Validators.required, Validators.min(1), Validators.max(60)]],
-      gender: ['', [Validators.required]],
-      primaryProfs: this.fb.group({}),
-      secondaryProfs: this.fb.group({}),
-      
-      //TODO Add honor / kills  and rank
-      // ADD Fraction ICON on Champs 
-      // Just came to mind  can make Guild Achivements section =]
-    })
+    }
+
+      this.addChampion = this.fb.group({
+        name: ['', [Validators.required]],
+        race: ['', [Validators.required]],
+        champClass: ['', [Validators.required]],
+        spec: ['', [Validators.required]],
+        level: ['1', [Validators.required, Validators.min(1), Validators.max(60)]],
+        gender: ['', [Validators.required]],
+        primaryProfs: this.fb.group({}),
+        secondaryProfs: this.fb.group({}),
+        //TODO Add honor / kills  and rank
+        // ADD Fraction ICON on Champs 
+        // Just came to mind  can make Guild Achivements section =]
+        // Add main role   dps / heal /tank
+        // maby add like additional pannel for showing Champs of different roles  like picutre with info 
+        // add voting system to navbar
+      })
+    
   }
 
-  test() {
-      console.log('asdasd');
-      console.log(this.tests);
-      for (let a in this.tests) {
-        console.log(a);
-      }   
-      this.db.list(`champions/${this.userId}`).push(this.addChampion.value);
+  handleChampion() {
+    if (history.state.data) {
+      firebase.database().ref(`champions`).child(this.userId).child(this.itemId).update(this.addChampion.value).catch(err => {
+        console.log(err);
+      });
+    } else {
+      this.db.list(`champions/${this.userId}`).push(this.addChampion.value).catch(err => {
+        console.log(err);
+      });
+    }
+    
   }
 
+  async getChampionToEdit(data) {
+    console.log('in async', data);
+    return this.itemToEdit = data;
+  }
+ 
   get name() {
     return this.addChampion.get('name');
   }
@@ -124,9 +167,9 @@ export class AddChampionComponent implements OnInit {
     if (professionsArray === 'primary') {
       if (event.checked) {
         this.professionCounter++;
-        this.checkedPrimaryProfessions[name] = 'checked';
+        this.checkedPrimaryProfessions[name] = 'checked'; 
         (this.addChampion.get('primaryProfs') as FormGroup).addControl(name, this.fb.control('',Validators.max(300)));
-        this.primaryProfsGroup = (this.addChampion.get('primaryProfs') as FormGroup);
+        // this.primaryProfsGroup = (this.addChampion.get('primaryProfs') as FormGroup);
       } else {
         this.professionCounter--;
         this.checkedPrimaryProfessions[name] = false;

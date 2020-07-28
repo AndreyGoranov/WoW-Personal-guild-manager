@@ -36,6 +36,7 @@
                 <section *ngIf="champClass.value">
                     <div>What's the spec of your {{champClass.value}} ?</div>
                     <mat-checkbox  *ngFor="let spec of specs[champClass.value | lowercase]"
+                        [checked]="this.addChampion.get('spec').value === spec"
                         [disabled]="this.checkedSpec[spec]"
                         (change)="getSelectedSpec($event, spec, champClass.value)">
                         {{spec}}
@@ -53,8 +54,10 @@
                 <section *ngIf="champClass.value">
                     <div>What's the gender of your champion ?</div>
                     <mat-radio-group aria-label="Select an option">
-                        <mat-radio-button (change)="getSelectedGender('male')" value="1">Male</mat-radio-button>
-                        <mat-radio-button (change)="getSelectedGender('female')" value="2">Female</mat-radio-button>
+                        <mat-radio-button (change)="getSelectedGender('male')" value="1" 
+                        [checked]="this.addChampion.get('gender').value === 'male'">Male</mat-radio-button>
+                        <mat-radio-button (change)="getSelectedGender('female')" value="2"
+                        [checked]="this.addChampion.get('gender').value === 'female'">Female</mat-radio-button>
                     </mat-radio-group>
                 </section>
                 <!-- PROFESSIONS -->
@@ -67,8 +70,8 @@
                     <div class="all-primary-prof-wraper" formGroupName="primaryProfs">
                         <section class="primary-prof-wraper"  *ngFor="let primaryProf of primaryProfessions">
                             <mat-checkbox 
-                            [disabled]="this.checkedPrimaryProfessions[primaryProf] !== 'checked' && 
-                            this.professionCounter === 2"
+                            [disabled]="this.checkedPrimaryProfessions[primaryProf] !== 'checked' && this.professionCounter === 2"
+                            [checked]="this.checkedPrimaryProfessions[primaryProf] === 'checked'"
                             (change)="getSelectedProfessions($event, primaryProf, 'primary')">
                             {{primaryProf}}
                             </mat-checkbox>
@@ -77,7 +80,7 @@
                             || this.addChampion.value[primaryProf]"> 
                                 <input class="prof-skill-input" matInput type="number" placeholder="Enter skill" 
                                 [formControlName]="primaryProf">
-                                <i *ngIf="this.primaryProfsGroup.get(primaryProf).invalid"
+                                <i *ngIf="this.primaryProfs.get(primaryProf).invalid"
                                  class="fa fa-exclamation-circle prof-skill-error ml-2" title="Max skill is 300"></i> 
                             </mat-input-field>
                             
@@ -98,6 +101,7 @@
                         <section class="secondary-prof-wraper" *ngFor="let secondaryProf of secondaryProfessions">
                             <mat-checkbox 
                             [disabled]="this.secondaryProfessions[secondaryProf]"
+                            [checked]="this.checkedSecondaryProfessions[secondaryProf] === 'checked'"
                             (change)="getSelectedProfessions($event, secondaryProf, 'secondary')">
                             {{secondaryProf}}
                             </mat-checkbox>
@@ -112,7 +116,7 @@
                     </div>
                     
                 </mat-expansion-panel>
-                <button class="mt-5" (click)="test()">asd</button>
+                <button class="mt-5" (click)="handleChampion()">asd</button>
                 <!-- DONT FORGET TO VALIDATE  FOR SELECTE SPEC  required-->
                 <!-- <button mat-stroked-button class="submit-button" [disabled]="regForm.invalid" (click)="submitForm()">Submit</button> -->
             </form>

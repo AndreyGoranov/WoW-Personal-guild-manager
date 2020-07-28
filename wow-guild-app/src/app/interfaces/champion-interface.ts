@@ -4,5 +4,8 @@ export interface Champion {
     class: string,
     spec: string,
     level: number,
-    primaryProfs: object
+    gender: string,
+    primaryProfs: object,
+    secondaryProfs: object,
+    id: string
 }

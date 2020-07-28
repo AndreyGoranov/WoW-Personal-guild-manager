@@ -1,3 +1,5 @@
+import { GuildModule } from './guildPannel/guild/guild.module';
+import { ConfirmDialogModule } from './shared/confirm-dialog/confirm-dialog.module';
 import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -22,6 +24,10 @@ import * as firebase from "firebase/app";
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatRadioModule} from '@angular/material/radio';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import { CreateGuildComponent } from './profilePannel/create-guild/create-guild.component';
+import { EnterGuildComponent } from './profilePannel/enter-guild/enter-guild.component';
 
 
 firebase.initializeApp(environment.firebase);
@@ -32,7 +38,9 @@ firebase.initializeApp(environment.firebase);
     LoginComponent,
     ProfileComponent,
     EntranceSceneComponent,
-    AddChampionComponent
+    AddChampionComponent,
+    CreateGuildComponent,
+    EnterGuildComponent,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +59,11 @@ firebase.initializeApp(environment.firebase);
     AngularFireAuthModule,
     NgbModule,
     MatGridListModule,
-    MatRadioModule
+    MatRadioModule,
+    MatIconModule,
+    MatMenuModule,
+    ConfirmDialogModule,
+    GuildModule
   ],
   providers: [],
   bootstrap: [AppComponent]

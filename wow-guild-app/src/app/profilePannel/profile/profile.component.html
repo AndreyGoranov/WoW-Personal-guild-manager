@@ -27,19 +27,38 @@
         <div class="container fluid mt-2 champs-container">
             <div class="row">
                 <div class="col champ-container"  *ngFor="let champ of this.userChampions">
+                    <div>
+                        <button mat-raised-button color="primary" (click)="editChampion(champ.id)">Edit</button>
+                        <!-- <h1>{{champ.id}}</h1> -->
+                        <mat-icon (click)="deleteChampion(champ.id)">delete</mat-icon>
+                        <mat-icon [matMenuTriggerFor]="menu">menu</mat-icon>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="enterGuild(champ.id)">Enter Guild</button>
+                            <button mat-menu-item (click)="createGuild(champ.id)">Create Guild</button>
+                        </mat-menu>
+                    </div>
                     <h2>{{champ.name}}</h2>
                     <img src={{this.racePictureSelector[champ.gender][(champ.race).toLowerCase()]}} 
                     style="width: 60px; height: 60px;"/>
                     <p>{{champ.race}} {{champ.champClass}}</p>
                     <p>Level: {{champ.level}}</p>
                     <p>Primary professions:</p>
-                    <div *ngFor="let prof of champ.primaryProfs | keyvalue">
-                        <p>{{prof.key}}: {{prof.value}}</p>
+                    <div *ngIf="champ.primaryProfs; else noPrimary">
+                        <div *ngFor="let prof of champ.primaryProfs | keyvalue">
+                            <p>{{prof.key}}: {{prof.value}}</p>
+                        </div>
                     </div>
+                    <ng-template #noPrimary>none</ng-template>
+                    
                     <p>Secondary professions:</p>
-                    <div *ngFor="let prof of champ.secondaryProfs | keyvalue">
-                        <p>{{prof.key}}: {{prof.value}}</p>
+                    <div *ngIf="champ.secondaryProfs; else noSecondary">
+                        <div *ngFor="let prof of champ.secondaryProfs | keyvalue">
+                            <p>{{prof.key}}: {{prof.value}}</p>
+                        </div>
                     </div>
+                    <ng-template #noSecondary>none</ng-template>
+                    
+                    
                 </div>
             </div>
         </div>

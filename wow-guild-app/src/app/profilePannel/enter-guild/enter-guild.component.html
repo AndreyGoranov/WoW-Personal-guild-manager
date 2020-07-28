@@ -1,0 +1,21 @@
+<div class="wraper">
+    <div class="form-wraper">
+        <form [formGroup]="enterGuild">
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Account Name" formControlName="guildAcc" />
+                <mat-error *ngIf="this.guildAcc.invalid && this.guildAcc.touched">
+                    this field is mandatory
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <input matInput placeholder="Password" formControlName="guildPass" />
+                <mat-error *ngIf="this.guildPass.invalid && this.guildPass.touched">
+                    this field is mandatory
+                </mat-error>
+            </mat-form-field>
+
+            <button (click)="handleAuthentication()">Enter</button>
+        </form>
+    </div>
+</div>
