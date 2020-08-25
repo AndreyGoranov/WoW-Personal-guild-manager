@@ -1,3 +1,4 @@
+import { DataTransferService } from './../../services/data-transfer.service';
 import { Router } from '@angular/router';
 import { racePictureSelect } from './../../utilities/constants/picture-selectors';
 import { Champion } from './../../interfaces/champion-interface';
@@ -13,11 +14,11 @@ import { ConfirmationDialogService } from 'src/app/shared/confirm-dialog/confirm
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private db: AngularFireDatabase, public router: Router, private dialogService: ConfirmationDialogService) { }
+  constructor(private dataTransfer: DataTransferService, public router: Router, private dialogService: ConfirmationDialogService) { }
 
   img: File = null;
   imgURL: any;
@@ -28,22 +29,22 @@ export class ProfileComponent implements OnInit {
   dbRefObject;
   userId: string;
   userChampions: Array<Champion> = [];
+  userChampz;
   
 
   ngOnInit(): void {
-    this.dbRefObject = firebase.database().ref('champions');
     this.userId = firebase.auth().currentUser.uid;
-    this.dbRefObject.on('value', snap => this.getChampions(snap.val())); 
+    firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => this.getChampions(snap.val()));
   }
 
   async getChampions(data) {
+    console.log(data);
     this.userChampions = [];
-    const champions = data[this.userId];
-    console.log(champions);
-    for(let champ in champions) {
+    for(let champ in data) {
       console.log('tursim id pri get',champ);
-      let currentChampion: Champion  = champions[champ];
+      let currentChampion: Champion = data[champ];
       currentChampion.id = champ;
+      console.log(currentChampion);
       this.userChampions.push(currentChampion);
       console.log(currentChampion);
     }
@@ -52,10 +53,8 @@ export class ProfileComponent implements OnInit {
 
   editChampion(id: string) {
     console.log('id v edit predi rout', id);
-    this.router.navigate(['add-champion'], {state: {data: {
-      operation: 'edit',
-      id: id
-    }}});
+    this.dataTransfer.champId = id;
+    this.router.navigateByUrl('add-champion');
   }
 
   deleteChampion(id: string) {
@@ -68,19 +67,23 @@ export class ProfileComponent implements OnInit {
     this.dialogService.open(options);
     this.dialogService.confirmed().subscribe(confirmed => {
       if (confirmed) {
-        firebase.database().ref(`champions`).child(this.userId).child(id).remove().catch(err => {
+        firebase.database().ref(`champions`).child(id).remove().catch(err => {
           console.log(err);
         })
       }
     })
   }
 
-  enterGuild(id:string) {
-    this.router.navigate(['enter-guild'], {state: {data: id}});
+  enterGuild(id:string, name: string) {
+    console.log('id v profile predi enter guild', id);
+    this.dataTransfer.champId = id;
+    this.dataTransfer.champName = name;
+    this.router.navigateByUrl('enter-guild');
   }
 
   createGuild(id:string) {
-    this.router.navigate(['guild-profile'], {state: {data: id}});
+    this.dataTransfer.champId = id;
+    this.router.navigateByUrl('guild-profile');
   }
 
   onFileSelected(event) {
@@ -103,7 +106,7 @@ export class ProfileComponent implements OnInit {
     const reader = new FileReader();
     reader.readAsDataURL(img); 
     reader.onload = (_event) => { 
-      this.imgURL = reader.result; 
+      this.imgURL = reader.result;
     }
   }
 

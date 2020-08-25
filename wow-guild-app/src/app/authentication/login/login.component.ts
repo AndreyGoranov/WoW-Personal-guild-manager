@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import * as firebase from "firebase/app";
@@ -10,7 +10,7 @@ import * as firebase from "firebase/app";
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private router: Router) { }
+  constructor(private fb: FormBuilder, private router: Router, private ngZone: NgZone) { }
 
   loginForm: FormGroup;
 
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   succesfulLogin(user) {
     console.log(user)
     console.log('success');
-    this.router.navigateByUrl('entrance');
+    this.ngZone.run(() => this.router.navigateByUrl('entrance'));
   }
 
   unsuccesfulLogin(error) {

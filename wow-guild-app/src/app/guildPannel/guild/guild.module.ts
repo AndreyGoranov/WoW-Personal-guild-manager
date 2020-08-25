@@ -1,17 +1,36 @@
+import { FullCalendarModule } from 'primeng/fullcalendar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { GuildNavComponent } from './../guild-nav/guild-nav.component';
 import { GuildCalendar } from './../guild-calendar/guild-calendar.component';
 import { Router, Routes, RouterModule } from '@angular/router';
 import { GuildTableComponent } from './../guild-table/guild-table.component';
 import { GuildGalleryComponent } from './../guild-gallery/guild-gallery.component';
 import { GuildAchivementsComponent } from './../guild-achivements/guild-achivements.component';
 import { GuildComponent } from './guild.component';
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatListModule } from '@angular/material/list';
+import { TableModule } from 'primeng/table';
+import { SliderModule } from 'primeng/slider';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-const routes: Routes = [{
-  path: '', component: GuildComponent
-}]
+const routes: Routes = [
+  { path: 'g', component: GuildComponent, children: [
+    { path: 'calendar', component: GuildCalendar, outlet: 'guild' },
+    { path: 'achivements', component: GuildAchivementsComponent, outlet: 'guild' },
+    { path: 'table', component: GuildTableComponent, outlet: 'guild'}
+  ]}
+]
 
 
 @NgModule({
@@ -21,15 +40,31 @@ const routes: Routes = [{
     GuildGalleryComponent,
     GuildAchivementsComponent,
     GuildTableComponent,
-    GuildCalendar
+    GuildNavComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    TableModule,
+    SliderModule,
+    MultiSelectModule,
+    CheckboxModule,
+    ContextMenuModule,
+    ButtonModule,
+    ToastModule,
+    InputTextModule,
+    ProgressBarModule,
+    DropdownModule,
+    FormsModule,
+    MatIconModule,
+    ReactiveFormsModule
   ],
   exports: [
-    GuildCalendar
   ]
 })
 export class GuildModule { }
+
+

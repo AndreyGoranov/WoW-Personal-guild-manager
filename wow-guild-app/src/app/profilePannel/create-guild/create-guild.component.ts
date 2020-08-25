@@ -1,3 +1,4 @@
+import { DataTransferService } from 'src/app/services/data-transfer.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
@@ -10,7 +11,7 @@ import * as firebase from "firebase/app";
 })
 export class CreateGuildComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase) { }
+  constructor(private fb: FormBuilder, private dataTransfer: DataTransferService) { }
 
   addGuild: FormGroup;
   guildCreatorId: string;
@@ -18,7 +19,8 @@ export class CreateGuildComponent implements OnInit {
   userId: string;
 
   ngOnInit(): void {
-    this.guildCreatorId = history.state.data;
+    this.guildCreatorId = this.dataTransfer.champId;
+    this.dataTransfer.champId = '';
     this.userId = firebase.auth().currentUser.uid;
     console.log(history.state);
     console.log(this.guildCreatorId);
@@ -39,14 +41,14 @@ export class CreateGuildComponent implements OnInit {
     this.guildInfo = this.addGuild.value;
     this.guildInfo.members = {};
     this.guildInfo.members[this.guildCreatorId] = "GuildMaster";
-    let currGuild = firebase.database().ref('guilds').push(this.guildInfo).once('value', snap => {
+    firebase.database().ref('guilds').push(this.guildInfo).once('value', snap => {
       name = snap.key;
-      console.log(name);
+      console.log(name);  
     }).catch(err => {
       console.log(err);
     });
     let guild = {'guild' : name}
-    firebase.database().ref('champions').child(this.userId).child(this.guildCreatorId).update(guild)
+    firebase.database().ref('champions').child(this.guildCreatorId).update(guild);
   }
 
   get guildName() {

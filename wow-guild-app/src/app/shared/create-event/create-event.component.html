@@ -1,0 +1,19 @@
+<div class="header">
+    <h1 mat-dialog-title>hi</h1>
+</div>
+<div mat-dialog-content>
+    <form [formGroup]="addEvent">
+        <section>
+            <div>What type of event are we making ?</div>
+            <mat-radio-group aria-label="Select an option">
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pvp'" (onChange)="getSelectedEventType('pvp')" value="1">PVP</mat-radio-button>
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pve'" (onChange)="getSelectedEventType('pve')" value="2">PVE</mat-radio-button>
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'other'" (onChange)="getSelectedEventType('other') "value="3">Other</mat-radio-button>
+            </mat-radio-group>
+        </section>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button class="btn btn-cancel" style="margin-right:10px;" (click)="cancel()">nonnono</button>
+    <button class="btn" (click)="confirm()">oke oke</button>
+</div>

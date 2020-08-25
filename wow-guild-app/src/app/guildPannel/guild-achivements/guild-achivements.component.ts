@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./guild-achivements.component.css']
 })
 export class GuildAchivementsComponent implements OnInit {
-
+  // add honorable mentions under every achivement 
+  // make 2 sections   a pvp and a pve 
+  
   constructor() { }
 
   ngOnInit(): void {

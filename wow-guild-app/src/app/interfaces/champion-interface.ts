@@ -5,7 +5,9 @@ export interface Champion {
     spec: string,
     level: number,
     gender: string,
-    primaryProfs: object,
-    secondaryProfs: object,
-    id: string
+    primaryProfs?: object,
+    secondaryProfs?: object,
+    id: string,
+    guild?: string,
+    role: string
 }

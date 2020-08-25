@@ -1,3 +1,4 @@
+import { relations } from './../../../utilities/constants/race-class-relations';
 import { Champion } from './../../../interfaces/champion-interface';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -5,6 +6,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { specs } from '../../../utilities/constants/specs'
 import { primaryProfessions, secondaryProfessions } from './../../../utilities/constants/professions';
 import * as firebase from "firebase/app";
+import { DataTransferService } from 'src/app/services/data-transfer.service';
 
 @Component({
   selector: 'app-add-champion',
@@ -15,10 +17,10 @@ import * as firebase from "firebase/app";
 export class AddChampionComponent implements OnInit {
   courses: any;
   
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase) {}
+  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private dataTransfer: DataTransferService) {}
 
-  races: Array<string> = ['Human', 'Dwarf', 'Night elf', 'Orc', 'Undead', 'Tauren', 'Troll'];
-  classes: Array<string> = ['Warrior', 'Paladin', 'Hunter', 'Rogue', 'Priest', 'Shaman', 'Mage', 'Warlock', 'Druid'];
+  relations = relations;
+  races = Object.keys(relations);
   specs: object = specs;
   checkedSpec = {};
   male = true;
@@ -30,21 +32,19 @@ export class AddChampionComponent implements OnInit {
   checkedPrimaryProfessions = {};
   checkedSecondaryProfessions = {};
   professionCounter = 0;
-  // primaryProfsGroup: FormGroup;
   tests: AngularFireList<string>;
   itemToEdit: Champion;
-  itemId: string;
+  champId: string;
   userId: string;
   addChampion: FormGroup;
 
   ngOnInit(): void {
     this.userId = firebase.auth().currentUser.uid;
-    if (history.state.data) {
-      this.itemId = history.state.data.id;
-      console.log('from edit button');
-      const itemToEditId = history.state.data.id;
-      console.log('object to edit', itemToEditId);
-      firebase.database().ref(`champions`).child(this.userId).child(itemToEditId).once('value').then(snap => 
+    if (this.dataTransfer.champId) {
+      this.champId = this.dataTransfer.champId;
+      this.dataTransfer.champId = '';
+      console.log('champId ot service', this.champId);
+      firebase.database().ref(`champions`).child(this.champId).once('value').then(snap => 
           this.getChampionToEdit(snap.val()).then(champ =>  {this.addChampion = this.fb.group({
             name: [champ.name, [Validators.required]],
             race: [champ.race, [Validators.required]],
@@ -95,12 +95,18 @@ export class AddChampionComponent implements OnInit {
   }
 
   handleChampion() {
-    if (history.state.data) {
-      firebase.database().ref(`champions`).child(this.userId).child(this.itemId).update(this.addChampion.value).catch(err => {
+    if (this.champId) {
+      const champData: Champion = this.addChampion.value;
+      champData.role = this.roleDetermination(this.addChampion.get('spec').value);
+      firebase.database().ref(`champions`).child(this.champId).update(champData).catch(err => {
         console.log(err);
       });
+      this.champId = '';
     } else {
-      this.db.list(`champions/${this.userId}`).push(this.addChampion.value).catch(err => {
+      const champData: Champion = this.addChampion.value;
+      champData['userId'] = this.userId;
+      champData.role = this.roleDetermination(this.addChampion.get('spec').value);
+      this.db.list('champions').push(champData).catch(err => {
         console.log(err);
       });
     }
@@ -196,88 +202,17 @@ export class AddChampionComponent implements OnInit {
     return this.addChampion.get('race').hasError('required')
   }
 
-  classOptionDisable(currentClass) {
-    const currentRace = this.addChampion.get('race').value;
-    if (currentRace === 'Human') {
-      switch(currentClass) {
-        case 'Druid':
-        case 'Shaman':
-        case 'Hunter':
-          return true;
-        default:
-          return false;
-      }
-    } else if (currentRace === 'Dwarf') {
-      switch(currentClass) {
-        case 'Druid':
-        case 'Shaman':
-        case 'Mage':
-        case 'Warlock':
-          return true;
-        default:
-          return false;
-      }
-    } else if (currentRace === 'Night elf') {
-      switch(currentClass) {
-        case 'Paladin':
-        case 'Shaman':
-        case 'Mage':
-        case 'Warlock':
-          return true;
-        default:
-          return false;
-        }
-      } else if (currentRace === "Gnome") {
-        switch(currentClass) {
-          case 'Druid':
-          case 'Shaman':
-          case 'Hunter':
-          case 'Priest':
-          case 'Paladin':
-            return true;
-          default:
-            return false;
-        }
-      } else if (currentRace === "Orc") {
-        switch(currentClass) {
-          case 'Druid':
-          case 'Priest':
-          case 'Mage':
-          case 'Paladin':
-            return true;
-          default:
-            return false;
-        }
-      } else if (currentRace === "Undead") {
-        switch(currentClass) {
-          case 'Druid':
-          case 'Shaman':
-          case 'Hunter':
-          case 'Paladin':
-            return true;
-          default:
-            return false;
-        }
-      } else if (currentRace === "Tauren") {
-        switch(currentClass) {
-          case 'Priest':
-          case 'Mage':
-          case 'Warlock':
-          case 'Paladin':
-            return true;
-          default:
-            return false;
-        }
-      } else if (currentRace === "Troll") {
-        switch(currentClass) {
-          case 'Druid':
-          case 'Paladin':
-          case 'Warlock':
-            return true;
-          default:
-            return false;
-        }
-      }
+  roleDetermination(spec: string) {
+    let role: string;
+    if (spec === 'Restoration' || spec === "Holy") {
+      role = 'Heal'
+    } else if (spec === 'Protection') {
+      role = 'Tank'
+    } else {
+      role = 'Dps'
     }
+    return role
+  }
+
 }  
 

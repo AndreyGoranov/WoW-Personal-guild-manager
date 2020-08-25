@@ -1,11 +1,12 @@
+import { DialogModule } from './shared/confirm-dialog/dialog.module';
+import { GuildCalendar } from './guildPannel/guild-calendar/guild-calendar.component';
 import { GuildModule } from './guildPannel/guild/guild.module';
-import { ConfirmDialogModule } from './shared/confirm-dialog/confirm-dialog.module';
 import { environment } from './../environments/environment';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -28,9 +29,18 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import { CreateGuildComponent } from './profilePannel/create-guild/create-guild.component';
 import { EnterGuildComponent } from './profilePannel/enter-guild/enter-guild.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { FlatpickrModule } from 'angularx-flatpickr';
+
 
 
 firebase.initializeApp(environment.firebase);
+// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
 @NgModule({
   declarations: [
@@ -41,12 +51,14 @@ firebase.initializeApp(environment.firebase);
     AddChampionComponent,
     CreateGuildComponent,
     EnterGuildComponent,
+    GuildCalendar
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -54,6 +66,7 @@ firebase.initializeApp(environment.firebase);
     MatSelectModule,
     MatCheckboxModule,
     MatExpansionModule,
+    FlatpickrModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase, 'wow-guild-manager'),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
@@ -62,9 +75,15 @@ firebase.initializeApp(environment.firebase);
     MatRadioModule,
     MatIconModule,
     MatMenuModule,
-    ConfirmDialogModule,
-    GuildModule
+    DialogModule,
+    GuildModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    
   ],
+  exports: [GuildCalendar],
   providers: [],
   bootstrap: [AppComponent]
 })

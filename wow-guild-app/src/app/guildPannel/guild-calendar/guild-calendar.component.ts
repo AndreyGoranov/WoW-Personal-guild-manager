@@ -1,3 +1,4 @@
+import { CreateEventDialogService } from './../../shared/create-event/create-event-dialog.service';
 import {
   Component,
   ChangeDetectionStrategy,
@@ -22,6 +23,7 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
+import { ConfirmationDialogService } from 'src/app/shared/confirm-dialog/confirmation-dialog.service';
 
 const colors: any = {
   red: {
@@ -40,11 +42,13 @@ const colors: any = {
 
 @Component({
   selector: 'guild-calendar-component',
-  templateUrl: './guild-calendar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './guild-calendar.component.html',
   styleUrls: ['./guild-calendar.component.css'],
-  
 })
+
+
+
 export class GuildCalendar {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
@@ -53,6 +57,7 @@ export class GuildCalendar {
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();
+  todayDate: Date = new Date();
 
   modalData: {
     action: string;
@@ -122,7 +127,10 @@ export class GuildCalendar {
 
   activeDayIsOpen: boolean = true;
 
-  constructor(private modal: NgbModal) {}
+  constructor(
+    private modal: NgbModal, private confirmDialogService: ConfirmationDialogService,
+    private createEventDialogService: CreateEventDialogService
+    ) {}
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
@@ -136,6 +144,29 @@ export class GuildCalendar {
       }
       this.viewDate = date;
     }
+  }
+
+  testDay(day) {
+    if (day.date.toString().slice(0, 15) === this.todayDate.toString().slice(0, 15)) {
+      return true
+    } else {
+      return day.date >= this.todayDate
+    }
+  }
+
+  createEvent(date) {
+    const options = {
+      title: 'Add Event',
+      message: `Creating Event for ${date} ?`,
+      cancelText: 'Cancel',
+      confirmText: 'Confirm'
+    }
+    this.createEventDialogService.open(options);
+    this.createEventDialogService.confirmed().subscribe(confirmed => {
+      if (confirmed) {
+        console.log('oke oke');
+      }
+    })
   }
 
   eventTimesChanged({

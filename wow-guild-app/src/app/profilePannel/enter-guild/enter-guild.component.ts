@@ -1,3 +1,4 @@
+import { DataTransferService } from './../../services/data-transfer.service';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
@@ -11,20 +12,23 @@ import * as firebase from "firebase/app";
 })
 export class EnterGuildComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private router: Router) { }
+  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private router: Router, private dataService: DataTransferService) { }
 
   enterGuild: FormGroup;
   enteringChampId: string;
   userId: string;
+  guildId: string;
 
   ngOnInit(): void {
-    this.enteringChampId = history.state.data;
+    this.enteringChampId = this.dataService.champId;
+    console.log(this.enteringChampId, 'enter id ot serice');
     this.userId = firebase.auth().currentUser.uid;
-    firebase.database().ref('champions').child(this.userId).child(this.enteringChampId).child('guild').once('value', snap => {
+    firebase.database().ref('champions').child(this.enteringChampId).child('guild').once('value', snap => {
       let guildId: string = snap.val();
-      console.log(guildId);
+      console.log(guildId);this.setGuildId(guildId);
       if (guildId) {
-        return this.router.navigate(['guild'], {state: {data: guildId}});
+        this.setGuildId(guildId);
+        return this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
       }
     })
     this.enterGuild = this.fb.group({
@@ -38,6 +42,10 @@ export class EnterGuildComponent implements OnInit {
   }
   get guildPass() {
     return this.enterGuild.get('guildPass');
+  }
+
+  setGuildId(id:string) {
+    this.dataService.guildId = id;
   }
 
   handleAuthentication() {
@@ -56,15 +64,16 @@ export class EnterGuildComponent implements OnInit {
         console.log('pass', pass);
         if (passToMatch === pass) {
           data.forEach(snap => {
-            let guildKey = snap.key
-            let guild = {'guild': guildKey}
+            this.guildId = snap.key
+            let guild = {'guild': this.guildId}
             let champStatus = {};
             champStatus[this.enteringChampId] = 'member'
-            firebase.database().ref('guilds').child(guildKey).child('members').update(champStatus);
-            firebase.database().ref('champions').child(this.userId).child(this.enteringChampId).update(guild);                                                                                                                                 
-            console.log(guildKey, 'key');
+            firebase.database().ref('guilds').child(this.guildId).child('members').update(champStatus);
+            firebase.database().ref('champions').child(this.enteringChampId).update(guild);                                                                                                                                 
+            console.log(this.guildId, 'key');
+            this.setGuildId(this.guildId);
           });
-           this.router.navigateByUrl('guild');
+          this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
         }
       }
     });
