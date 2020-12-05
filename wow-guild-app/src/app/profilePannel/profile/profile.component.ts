@@ -34,7 +34,9 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = firebase.auth().currentUser.uid;
-    firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => this.getChampions(snap.val()));
+    firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => this.getChampions(snap.val()).catch(err => {
+      console.log(err);
+    }));
   }
 
   async getChampions(data) {

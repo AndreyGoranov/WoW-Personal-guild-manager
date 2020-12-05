@@ -23,6 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { DialogModule } from 'src/app/shared/confirm-dialog/dialog.module';
 
 const routes: Routes = [
   { path: 'g', component: GuildComponent, children: [
@@ -60,7 +61,8 @@ const routes: Routes = [
     DropdownModule,
     FormsModule,
     MatIconModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogModule
   ],
   exports: [
   ]

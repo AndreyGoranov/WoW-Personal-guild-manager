@@ -20,12 +20,15 @@ export class CreateEventDialogService {
            message: options.message,
            cancelText: options.cancelText,
            confirmText: options.confirmText
-         }
+         },
+         height: '450px',
+         width: '900px'
     });
   }
   public confirmed(): Observable<any> {
     
     return this.dialogRef.afterClosed().pipe(take(1), map(res => {
+        console.log(res);
         return res;
       }
     ));

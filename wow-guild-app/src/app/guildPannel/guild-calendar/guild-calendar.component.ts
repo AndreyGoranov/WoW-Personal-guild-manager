@@ -159,14 +159,9 @@ export class GuildCalendar {
       title: 'Add Event',
       message: `Creating Event for ${date} ?`,
       cancelText: 'Cancel',
-      confirmText: 'Confirm'
+      confirmText: 'Confirm',
     }
     this.createEventDialogService.open(options);
-    this.createEventDialogService.confirmed().subscribe(confirmed => {
-      if (confirmed) {
-        console.log('oke oke');
-      }
-    })
   }
 
   eventTimesChanged({

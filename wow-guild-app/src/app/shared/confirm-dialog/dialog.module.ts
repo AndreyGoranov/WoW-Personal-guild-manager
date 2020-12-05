@@ -1,3 +1,4 @@
+import { EventComponent } from './../event-component/event/event.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
@@ -10,12 +11,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
-
+import { SlideMenuModule } from 'primeng/slidemenu';
 
 @NgModule({
-  declarations: [ConfirmationDialogComponent, CreateEventComponent],
+  declarations: [ConfirmationDialogComponent, CreateEventComponent, EventComponent],
   imports: [
     CommonModule,
     MatDialogModule,
@@ -26,9 +25,10 @@ import { CommonModule } from '@angular/common';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    MatRadioModule
+    MatRadioModule,
+    SlideMenuModule,
   ],
-  exports: [ConfirmationDialogComponent, CreateEventComponent],
+  exports: [ConfirmationDialogComponent, CreateEventComponent, EventComponent],
   entryComponents: [ConfirmationDialogComponent, CreateEventComponent],
   providers: [ConfirmationDialogService, CreateEventComponent]
 })

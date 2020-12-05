@@ -5,7 +5,7 @@ export const racePictureSelect = {
         tauren: "..//..//..//assets/pictures/races/120px-Charactercreate-races_tauren-male.png",
         troll: "..//..//..//assets/pictures/races/120px-Charactercreate-races_troll-male.png",
         human: "..//..//..//assets/pictures/races/120px-Charactercreate-races_human-male.png",
-        gnome: "..//..//..//assets/pictures/races/120px-Charactercreate-races_gnome-male.png",
+        gnome: "..//..//..//assets/pictures/races/120px-CharacterCreate-Races_gnome-male.png",
         dwarf: "..//..//..//assets/pictures/races/120px-Charactercreate-races_dwarf-male.png",
         'night elf': "..//..//..//assets/pictures/races/Charactercreate-races_nightelf-male.png"
     },

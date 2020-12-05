@@ -38,7 +38,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 
 
-
 firebase.initializeApp(environment.firebase);
 // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
@@ -51,7 +50,7 @@ firebase.initializeApp(environment.firebase);
     AddChampionComponent,
     CreateGuildComponent,
     EnterGuildComponent,
-    GuildCalendar
+    GuildCalendar,
   ],
   imports: [
     BrowserModule,

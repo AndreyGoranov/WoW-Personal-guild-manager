@@ -1,5 +1,5 @@
 
-export const dungeons = function() {
+export const dungeons = async function() {
     const boe = 'Binds when equipped';
     const bop = 'Binds when picked up';
     const reqLvl = 'Requires Level';

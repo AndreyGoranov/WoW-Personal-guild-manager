@@ -1,17 +1,73 @@
 <div class="header">
-    <h1 mat-dialog-title>hi</h1>
+    <h1 mat-dialog-title>Add usually playing time for every champion and when an eent is created hint for best time</h1>
 </div>
 <div mat-dialog-content>
     <form [formGroup]="addEvent">
         <section>
             <div>What type of event are we making ?</div>
             <mat-radio-group aria-label="Select an option">
-                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pvp'" (onChange)="getSelectedEventType('pvp')" value="1">PVP</mat-radio-button>
-                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pve'" (onChange)="getSelectedEventType('pve')" value="2">PVE</mat-radio-button>
-                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'other'" (onChange)="getSelectedEventType('other') "value="3">Other</mat-radio-button>
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pvp'" (click)="getSelectedEventType('pvp')" value="1">PVP</mat-radio-button>
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'pve'" (click)="getSelectedEventType('pve')" value="2">PVE</mat-radio-button>
+                <mat-radio-button [checked]="this.addEvent.get('eventType').value === 'other'" (click)="getSelectedEventType('other') "value="3">Other</mat-radio-button>
             </mat-radio-group>
+        
+            <div *ngIf="this.addEvent.get('eventType').value === 'pve'">
+                <mat-form-field appearance="fill">
+                    <mat-label>Dungeon / Raid</mat-label>
+                    <mat-select [formControl]="selectedEvent">
+                        <mat-option>--</mat-option>
+                        <mat-option *ngFor="let dungeonName of dungeonNames" [value]="dungeonName" (click)="handleDungeonSelect(dungeonName)">
+                        {{dungeonName}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="selectedEvent.hasError('required')">Please choose a instance</mat-error>
+                </mat-form-field>
+            </div>
+
+            <section *ngIf="this.addEvent.get('selectedEvent').value !== '' ">
+                <input type="time" required [formControl]="startingTime"><small> Tip: Vote for time</small>
+                <i *ngIf="this.addEvent.get('startingTime').invalid"
+                class="fa fa-exclamation-circle prof-skill-error ml-2" title="Please select starting time!"></i> 
+            </section>
+
+            <section *ngIf="!startingTime.hasError('required')">
+                <label>Set a meeting point</label>
+                <input type="text" required [formControl]="meetingPoint">
+                <i *ngIf="this.addEvent.get('meetingPoint').invalid"
+                class="fa fa-exclamation-circle prof-skill-error ml-2" title="Field is mandatory"></i> 
+            </section>
+
+            <section *ngIf="this.addEvent.get('eventType').value === 'pve'">
+                <h3>Set limitations</h3>
+                <div>
+                    <span (click)="handleLimitationMenus('class')">Class</span>
+                    <span (click)="handleLimitationMenus('role')">Role</span>
+                </div>
+            </section>
+
+            <section>
+                <div *ngIf="this.showClassLimits" formGroupName="classLimits">
+                    <ul *ngFor="let class of classes">
+                        <li>
+                            <label>{{class | titlecase}}</label>
+                            <input type="number" min="0" [formControlName]="class">
+                        </li>
+                    </ul>
+                </div>
+                <div *ngIf="this.showRoleLimits" formGroupName="roleLimits">
+                    <ul *ngFor="let role of roles">
+                        <li>
+                            <label>{{role | titlecase}}</label>
+                            <input type="number" min="0" [formControlName]="role">
+                        </li>
+                    </ul>
+                    
+                </div>
+            </section>
         </section>
+
     </form>
+    
 </div>
 <div mat-dialog-actions>
     <button class="btn btn-cancel" style="margin-right:10px;" (click)="cancel()">nonnono</button>
