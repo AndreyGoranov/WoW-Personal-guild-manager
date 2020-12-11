@@ -1,12 +1,15 @@
 import { relations } from './../../../utilities/constants/race-class-relations';
 import { Champion } from './../../../interfaces/champion-interface';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { specs } from '../../../utilities/constants/specs'
 import { primaryProfessions, secondaryProfessions } from './../../../utilities/constants/professions';
 import * as firebase from "firebase/app";
 import { DataTransferService } from 'src/app/services/data-transfer.service';
+import { nameVerification } from 'src/app/utilities/constants/nameRegex';
+import { Router } from '@angular/router';
+import { SelectChampionService } from 'src/app/services/select-champion.service';
 
 @Component({
   selector: 'app-add-champion',
@@ -17,11 +20,16 @@ import { DataTransferService } from 'src/app/services/data-transfer.service';
 export class AddChampionComponent implements OnInit {
   courses: any;
   
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private dataTransfer: DataTransferService) {}
+  constructor(private fb: FormBuilder,
+    private db: AngularFireDatabase,
+    private dataTransfer: DataTransferService,
+    public router: Router,
+    private selectChampionService: SelectChampionService,
+    private renderer: Renderer2) { }
 
   relations = relations;
   races = Object.keys(relations);
-  specs: object = specs;
+  specs: object = specs; 
   checkedSpec = {};
   male = true;
   female = false;
@@ -46,7 +54,7 @@ export class AddChampionComponent implements OnInit {
       console.log('champId ot service', this.champId);
       firebase.database().ref(`champions`).child(this.champId).once('value').then(snap => 
           this.getChampionToEdit(snap.val()).then(champ =>  {this.addChampion = this.fb.group({
-            name: [champ.name, [Validators.required]],
+            name: [champ.name, [Validators.required, Validators.minLength(2), Validators.maxLength(12), Validators.pattern(nameVerification)]],
             race: [champ.race, [Validators.required]],
             champClass: [champ.champClass, [Validators.required]],
             spec: [champ.spec, [Validators.required]],
@@ -76,7 +84,7 @@ export class AddChampionComponent implements OnInit {
     }
 
       this.addChampion = this.fb.group({
-        name: ['', [Validators.required]],
+        name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(12), Validators.pattern(nameVerification)]],
         race: ['', [Validators.required]],
         champClass: ['', [Validators.required]],
         spec: ['', [Validators.required]],
@@ -95,20 +103,36 @@ export class AddChampionComponent implements OnInit {
   }
 
   handleChampion() {
+    let currentChamp: Champion;
+    let succesfullOperation = true;
     if (this.champId) {
       const champData: Champion = this.addChampion.value;
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
       firebase.database().ref(`champions`).child(this.champId).update(champData).catch(err => {
+        if(err) {
+          succesfullOperation = false;
+        }
         console.log(err);
       });
+      currentChamp = champData;
       this.champId = '';
     } else {
       const champData: Champion = this.addChampion.value;
       champData['userId'] = this.userId;
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
       this.db.list('champions').push(champData).catch(err => {
+        if(err) {
+          succesfullOperation = false;
+        }
         console.log(err);
       });
+      currentChamp = champData;
+    }
+    if (succesfullOperation) {
+      this.selectChampionService.selectedChampion.next(currentChamp);
+      this.router.navigateByUrl('entrance');
+    } else {
+      alert('Something went wrong :( Plese try again and excuse us for the trouble :)');
     }
     
   }

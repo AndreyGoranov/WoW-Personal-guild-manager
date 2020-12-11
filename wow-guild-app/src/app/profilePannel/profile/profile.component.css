@@ -27,17 +27,122 @@
 
 .user-champions {
     display: flex;
-    justify-content: center;
     flex-direction: column;
 }
 
-.champs-container {
+.user-champions .champs-heading {
+    justify-content: center;
+}
+
+@media all and (min-width: 280px) and (max-width: 480px) {
+    .champ-list {
+        display: flex;
+        flex-direction: row;
+        background-color: lightblue;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        margin-top: 2rem;
+        overflow: auto;
+        white-space: nowrap;
+        height: 44px;
+        align-items: center;
+        border-radius: 7px;
+        color: black;
+        border: 5px dotted;
+    }
+
+    .champ-info {
+        text-align: center;
+        margin-top: 3rem;
+        border: 10px double #fd0707;
+        border-radius: 12px;
+        margin-left: 1rem;
+        padding-top: 1rem;
+        margin-right: 1rem;
+        padding-bottom: 1rem;
+        background-color: #000000;
+        color: #00ff21;
+        font-weight: bold;
+        font-family: monospace;
+    }
 
 }
+
+@media all and (min-width: 481px) and (max-width: 736px) {
+    .list-and-info-wrap {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .champ-info {
+        position: absolute;
+        margin-top: 2.2rem;
+        text-align: center;
+        border: 10px double #fd0707;
+        border-radius: 12px;
+        margin-left: 1rem;
+        padding-top: 1rem;
+        margin-right: 1rem;
+        padding-bottom: 1rem;
+        background-color: #000000;
+        color: #00ff21;
+        font-weight: bold;
+        font-family: monospace;
+        font-size: 20px;
+        height: 450px;
+    }
+
+    .champ-list {
+        flex-direction: column;
+        background-color: #422057FF;
+        margin-left: auto;
+        margin-right: 1rem;
+        margin-top: 2rem;
+        overflow: auto;
+        white-space: nowrap;
+        height: 450px;
+        align-items: center;
+        border-radius: 7px;
+        color: #FCF951FF;
+        border: 10px ridge #FCF951FF
+    }
+}
+
+@media all and (min-width: 481px) and (max-width: 735px) {
+
+}
+
+.list-item {
+    margin: 0;
+    cursor: pointer;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-weight: bold;
+    font-size: x-large;
+    border-radius: 7px;
+    font-family: monospace;
+}
+
+.list-item:hover {
+    background-color: #fd0707;
+}
+
+
+/* .champ-list {
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    text-align: end;
+} */
 
 .champ-container {
     background-color: red;
     margin: 0 5px 0 5px;
+    display: flex;
+    flex-direction: column;
+    border: 3px solid gold;
+    border-radius: 7px;
 }
 
 .champs-heading {
@@ -54,10 +159,12 @@
     border: 2px solid black;
     border-radius: 7px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .add-champion {
     cursor: pointer;
+    outline: none;
 }
 .add-champion:active {
     transform: translateY(5px);  

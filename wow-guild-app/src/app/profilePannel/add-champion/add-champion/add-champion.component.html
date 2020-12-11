@@ -6,7 +6,7 @@
                 <mat-form-field appearance="fill">
                     <input matInput placeholder="Name" formControlName="name">
                     <mat-error *ngIf="this.name.invalid && this.name.touched">
-                        name is mandatory
+                        Please use only letters (2-12 length).
                     </mat-error>
                 </mat-form-field>
             <!-- RACE -->
@@ -34,7 +34,7 @@
                 <!-- SPEC -->
                 <section *ngIf="champClass.value">
                     <div>What's the spec of your {{champClass.value}} ?</div>
-                    <mat-checkbox  *ngFor="let spec of specs[champClass.value | lowercase]"
+                    <mat-checkbox class="spec-checkbox"  *ngFor="let spec of specs[champClass.value | lowercase]"
                         [checked]="this.addChampion.get('spec').value === spec"
                         [disabled]="this.checkedSpec[spec]"
                         (change)="getSelectedSpec($event, spec, champClass.value)">
@@ -54,9 +54,9 @@
                 <section *ngIf="champClass.value">
                     <div>What's the gender of your champion ?</div>
                     <mat-radio-group aria-label="Select an option">
-                        <mat-radio-button (change)="getSelectedGender('male')" value="1" 
+                        <mat-radio-button class="gender-button" (change)="getSelectedGender('male')" value="1" 
                         [checked]="this.addChampion.get('gender').value === 'male'">Male</mat-radio-button>
-                        <mat-radio-button (change)="getSelectedGender('female')" value="2"
+                        <mat-radio-button class="gender-button" (change)="getSelectedGender('female')" value="2"
                         [checked]="this.addChampion.get('gender').value === 'female'">Female</mat-radio-button>
                     </mat-radio-group>
                 </section>
@@ -116,7 +116,7 @@
                     </div>
                     
                 </mat-expansion-panel>
-                <button class="mt-5" (click)="handleChampion()">asd</button>
+                <button class="mt-5 submit-button" (click)="handleChampion()"  [disabled]="addChampion.invalid">Create</button>
                 <!-- DONT FORGET TO VALIDATE  FOR SELECTE SPEC  required-->
                 <!-- <button mat-stroked-button class="submit-button" [disabled]="regForm.invalid" (click)="submitForm()">Submit</button> -->
             </form>

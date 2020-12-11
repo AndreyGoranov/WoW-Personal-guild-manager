@@ -1,4 +1,4 @@
-<div class="wraper">
+<div >
     <!-- <div class="person-data">
         <div class="picture-container">
             <input type="file" id="selectedFile" style="display: none;" (change)="onFileSelected($event)" />
@@ -18,49 +18,25 @@
         
         <div class="champs-heading">
             <h1>C H A M P I O N S</h1>
-            <img class="add-champion" title="Add Champion" 
+            <img class="add-champion" title="Add Champion"
                 src="https://img.icons8.com/doodle/64/000000/plus--v1.png"
                 routerLink="/add-champion" 
             />
         </div>
 
-        <div class="container fluid mt-2 champs-container">
-            <div class="row">
-                <div class="col champ-container"  *ngFor="let champ of this.userChampions">
-                    <div>
-                        <button mat-raised-button color="primary" (click)="editChampion(champ.id)">Edit</button>
-                        <mat-icon (click)="deleteChampion(champ.id)">delete</mat-icon>
-                        <mat-icon [matMenuTriggerFor]="menu">menu</mat-icon>
-                        <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="enterGuild(champ.id, champ.name)">Enter Guild</button>
-                            <button mat-menu-item (click)="createGuild(champ.id)">Create Guild</button>
-                        </mat-menu>
-                    </div>
-                    <h2>{{champ.name}}</h2>
-                    <img src={{this.racePictureSelector[champ.gender][(champ.race).toLowerCase()]}} 
-                    style="width: 60px; height: 60px;"/>
-                    <p>{{champ.race | titlecase}} {{champ.champClass}}</p>
-                    <p>Level: {{champ.level}}</p>
-                    <p>Primary professions:</p>
-                    <div *ngIf="champ.primaryProfs; else noPrimary">
-                        <div *ngFor="let prof of champ.primaryProfs | keyvalue">
-                            <p>{{prof.key}}: {{prof.value}}</p>
-                        </div>
-                    </div>
-                    <ng-template #noPrimary>none</ng-template>
-                    
-                    <p>Secondary professions:</p>
-                    <div *ngIf="champ.secondaryProfs; else noSecondary">
-                        <div *ngFor="let prof of champ.secondaryProfs | keyvalue">
-                            <p>{{prof.key}}: {{prof.value}}</p>
-                        </div>
-                    </div>
-                    <ng-template #noSecondary>none</ng-template>
-                    
-                    
+        <div class="list-and-info-wrap">
+            <div class="champ-list">
+                <div *ngFor="let champ of this.userChampions" class="list-item">
+                    <h3 (click)="selectChampion(champ)" class="list-item">{{champ.name}}</h3>
                 </div>
             </div>
+       
+            <div class="champ-info">
+                <app-champ *ngIf="initialChampion" [initialChampion]="initialChampion"></app-champ>
+            </div>
         </div>
+        
+    </div>
         
     
 </div>

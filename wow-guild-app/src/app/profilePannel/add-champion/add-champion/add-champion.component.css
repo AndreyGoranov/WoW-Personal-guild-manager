@@ -1,6 +1,8 @@
 .wraper {
     display: flex;
     justify-content: center;
+    background: white;
+    height: 100vh;
 }
 
 .form-wraper form{
@@ -19,6 +21,14 @@ mat-panel-title {
 .secondary-prof-wraper {
     text-align: start;
     display: flex;
+}
+
+.spec-checkbox {
+    margin-left: 1rem
+}
+
+.gender-button {
+    margin-left: 1rem;
 }
 
 @media only screen and (min-width: 768px) {

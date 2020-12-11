@@ -1,0 +1,31 @@
+<div [@dataChangeAnimation]="selectedChampion.name" class="content" *ngIf="selectedChampion">
+    <div class="champ-interface">
+        <img class="edit-icon" src="https://img.icons8.com/android/24/000000/edit.png" (click)="editChampion(selectedChampion.id)" title="Edit"/>
+        <mat-icon class="delete-icon" (click)="deleteChampion(selectedChampion.id)" title="Delete">delete</mat-icon>
+        <mat-icon class="menu-icon" [matMenuTriggerFor]="menu">menu</mat-icon>
+        <mat-menu #menu="matMenu" title="Menu">
+            <button mat-menu-item (click)="enterGuild(selectedChampion.id, selectedChampion.name)">Enter Guild</button>
+            <button mat-menu-item (click)="createGuild(selectedChampion.id)">Create Guild</button>
+        </mat-menu>
+    </div>
+    <h2 class="champ-name">{{selectedChampion.name}}</h2>
+    <img src={{this.racePictureSelector[selectedChampion.gender][(selectedChampion.race).toLowerCase()]}}
+        class="champ-icon"/>
+    <p>{{selectedChampion.race | titlecase}} {{selectedChampion.champClass}}</p>
+    <p>Level: {{selectedChampion.level}}</p>
+    <p>Primary professions:</p>
+    <div *ngIf="selectedChampion.primaryProfs; else noPrimary">
+        <div *ngFor="let prof of selectedChampion.primaryProfs | keyvalue">
+            <p>{{prof.key}}: {{prof.value}}</p>
+        </div>
+    </div>
+    <ng-template #noPrimary>none</ng-template>
+
+    <p>Secondary professions:</p>
+    <div *ngIf="selectedChampion.secondaryProfs; else noSecondary">
+        <div *ngFor="let prof of selectedChampion.secondaryProfs | keyvalue">
+            <p>{{prof.key}}: {{prof.value}}</p>
+        </div>
+    </div>
+    <ng-template #noSecondary>none</ng-template>
+</div>

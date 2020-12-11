@@ -36,6 +36,7 @@ import { MatListModule } from '@angular/material/list';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import { ChampComponent } from './profilePannel/champ/champ.component';
 
 
 firebase.initializeApp(environment.firebase);
@@ -51,6 +52,7 @@ firebase.initializeApp(environment.firebase);
     CreateGuildComponent,
     EnterGuildComponent,
     GuildCalendar,
+    ChampComponent,
   ],
   imports: [
     BrowserModule,
