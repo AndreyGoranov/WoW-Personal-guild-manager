@@ -1,8 +1,8 @@
 import { relations } from './../../../utilities/constants/race-class-relations';
 import { Champion } from './../../../interfaces/champion-interface';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
-import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { specs } from '../../../utilities/constants/specs'
 import { primaryProfessions, secondaryProfessions } from './../../../utilities/constants/professions';
 import * as firebase from "firebase/app";
@@ -10,6 +10,7 @@ import { DataTransferService } from 'src/app/services/data-transfer.service';
 import { nameVerification } from 'src/app/utilities/constants/nameRegex';
 import { Router } from '@angular/router';
 import { SelectChampionService } from 'src/app/services/select-champion.service';
+
 
 @Component({
   selector: 'app-add-champion',
@@ -25,8 +26,8 @@ export class AddChampionComponent implements OnInit {
     private dataTransfer: DataTransferService,
     public router: Router,
     private selectChampionService: SelectChampionService,
-    private renderer: Renderer2) { }
-
+    ) { }
+   
   relations = relations;
   races = Object.keys(relations);
   specs: object = specs; 
@@ -77,10 +78,9 @@ export class AddChampionComponent implements OnInit {
             this.checkedSecondaryProfessions[prof] = 'checked';
             this.secondaryProfs.get(prof).setValidators(Validators.max(300));
           }
-        })
-        
+        }) 
       )
-
+        
     }
 
       this.addChampion = this.fb.group({
@@ -141,7 +141,8 @@ export class AddChampionComponent implements OnInit {
     console.log('in async', data);
     return this.itemToEdit = data;
   }
- 
+
+
   get name() {
     return this.addChampion.get('name');
   }
@@ -193,19 +194,17 @@ export class AddChampionComponent implements OnInit {
     console.log(this.checkedSpec)
   }
 
-  getSelectedProfessions(event, name, professionsArray) {
+  getSelectedProfessions(event, name, professionsArray) { 
     if (professionsArray === 'primary') {
       if (event.checked) {
         this.professionCounter++;
-        this.checkedPrimaryProfessions[name] = 'checked'; 
+        this.checkedPrimaryProfessions[name] = 'checked';
         (this.addChampion.get('primaryProfs') as FormGroup).addControl(name, this.fb.control('',Validators.max(300)));
-        // this.primaryProfsGroup = (this.addChampion.get('primaryProfs') as FormGroup);
       } else {
         this.professionCounter--;
         this.checkedPrimaryProfessions[name] = false;
         (this.addChampion.get('primaryProfs') as FormGroup).removeControl(name);
       }
-     
     } else if (professionsArray === 'secondary') {
       if (event.checked) {
         this.checkedSecondaryProfessions[name] = 'checked';
@@ -215,11 +214,6 @@ export class AddChampionComponent implements OnInit {
         (this.addChampion.get('secondaryProfs') as FormGroup).removeControl(name);
       }
     }
-    
-    console.log(this.professionCounter)
-    console.log(this.addChampion);
-    console.log(this.checkedPrimaryProfessions);
-    console.log(this.checkedSecondaryProfessions);
   }
 
   classSelectDisable() {

@@ -78,7 +78,7 @@
                             <mat-input-field class="prof-skill-input-wraper" 
                             *ngIf="this.checkedPrimaryProfessions[primaryProf] === 'checked' 
                             || this.addChampion.value[primaryProf]"> 
-                                <input class="prof-skill-input" matInput type="number" placeholder="Enter skill" 
+                                <input #skillInputRef="matInput" appFocus class="prof-skill-input" matInput type="number" placeholder="Enter skill" 
                                 [formControlName]="primaryProf">
                                 <i *ngIf="this.primaryProfs.get(primaryProf).invalid"
                                  class="fa fa-exclamation-circle prof-skill-error ml-2" title="Max skill is 300"></i> 
@@ -108,7 +108,7 @@
                             <mat-input-field  class="prof-skill-input-wraper" 
                                 *ngIf="this.checkedSecondaryProfessions[secondaryProf] === 'checked' 
                                 || this.addChampion.value[secondaryProf]"> 
-                                <input class="prof-skill-input" matInput placeholder="Enter skill" [formControlName]="secondaryProf">
+                                <input #skillInputRef="matInput" appFocus class="prof-skill-input" matInput placeholder="Enter skill" [formControlName]="secondaryProf">
                                 <i *ngIf="this.secondaryProfs.get(secondaryProf).invalid"
                                 class="fa fa-exclamation-circle prof-skill-error ml-2" title="Max skill is 300"></i>
                             </mat-input-field>

@@ -37,6 +37,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { ChampComponent } from './profilePannel/champ/champ.component';
+import { FocusDirective } from './directives/focus.directive';
 
 
 firebase.initializeApp(environment.firebase);
@@ -53,6 +54,7 @@ firebase.initializeApp(environment.firebase);
     EnterGuildComponent,
     GuildCalendar,
     ChampComponent,
+    FocusDirective,
   ],
   imports: [
     BrowserModule,
