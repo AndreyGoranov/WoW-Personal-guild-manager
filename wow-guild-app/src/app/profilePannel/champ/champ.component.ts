@@ -68,9 +68,10 @@ export class ChampComponent implements OnInit {
       if (confirmed) {
         firebase.database().ref(`champions`).child(id).remove().catch(err => {
           console.log(err);
-        })
+        });
+        this.selectChampionService.selectedChampion.next(this.initialChampion);
       }
-    })
+    });
   }
 
   enterGuild(id:string, name: string) {
@@ -81,8 +82,31 @@ export class ChampComponent implements OnInit {
   }
 
   createGuild(id:string) {
-    this.dataTransfer.champId = id;
-    this.router.navigateByUrl('guild-profile');
+    firebase.database().ref('champions').child(id).once('value').then(snap => {
+      const currentGuildId = snap.val().guild;
+      if (currentGuildId) {
+        const options = {
+          title: 'You already have a guild',
+          message: 'Do you want to delete current guild and create new one ?',
+          cancelText: 'Cancel',
+          confirmText: 'Confirm'
+        }
+        this.dialogService.open(options);
+        this.dialogService.confirmed().subscribe(confirm => {
+          if (confirm) {
+            firebase.database().ref('guilds').child(currentGuildId).remove().catch(err => {
+              if (err) {
+                alert('Whoops something went wrong deleting the guild. Please try again !');
+              }
+            });
+            this.router.navigateByUrl('guild-profile');
+          }
+        });
+      } else {
+        this.dataTransfer.champId = id;
+        this.router.navigateByUrl('guild-profile');
+      }
+    });
   }
 
 }

@@ -2,7 +2,7 @@
     <div class="form-wraper">
         <form [formGroup]="enterGuild">
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Account Name" formControlName="guildAcc" />
+                <input appFocus matInput placeholder="Account Name" formControlName="guildAcc" />
                 <mat-error *ngIf="this.guildAcc.invalid && this.guildAcc.touched">
                     this field is mandatory
                 </mat-error>

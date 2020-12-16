@@ -10,5 +10,6 @@ export class DataTransferService {
   champId: string;
   guildId: string;
   champName: string;
+  champRace: string;
 
 }

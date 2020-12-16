@@ -1,8 +1,13 @@
 .wraper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     background: white;
     height: 100vh;
+}
+
+.heading {
+    text-align: center;
 }
 
 .form-wraper form{
@@ -23,7 +28,7 @@ mat-panel-title {
     display: flex;
 }
 
-.spec-checkbox {
+.spec-button {
     margin-left: 1rem
 }
 

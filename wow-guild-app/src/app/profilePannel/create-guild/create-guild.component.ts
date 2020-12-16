@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import * as firebase from "firebase/app";
+import { detectFraction } from 'src/app/utilities/constants/fraction-detect';
+import { nameVerification } from 'src/app/utilities/constants/nameRegex';
+
 
 @Component({
   selector: 'app-create-guild',
@@ -25,11 +28,10 @@ export class CreateGuildComponent implements OnInit {
     console.log(history.state);
     console.log(this.guildCreatorId);
     this.addGuild = this.fb.group({
-      guildName: ['', [Validators.required]],
-      guildAcc: ['', [Validators.required]],
-      guildPass: ['', [Validators.required]],
-      guildFraction: ['', [Validators.required]],
-    })
+      guildName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(24), Validators.pattern(nameVerification)]],
+      guildAcc: ['', [Validators.required, Validators.maxLength(50)]],
+      guildPass: ['', [Validators.required, Validators.maxLength(50)]]
+    });
   } 
 
   setFraction(name: string) {
@@ -39,6 +41,7 @@ export class CreateGuildComponent implements OnInit {
   createGuildInfo() {
     let name: string;
     this.guildInfo = this.addGuild.value;
+    this.guildInfo.fraction = detectFraction(this.dataTransfer.champRace);
     this.guildInfo.members = {};
     this.guildInfo.members[this.guildCreatorId] = "GuildMaster";
     firebase.database().ref('guilds').push(this.guildInfo).once('value', snap => {
@@ -59,9 +62,6 @@ export class CreateGuildComponent implements OnInit {
   }
   get guildPass() {
     return this.addGuild.get('guildPass');
-  }
-  get guildFraction() {
-    return this.addGuild.get('guildFraction');
   }
 
 }

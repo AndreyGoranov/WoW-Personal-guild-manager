@@ -1,42 +1,32 @@
 <div class="wraper">
     <div class="heading-wraper">
-        
+        <h1>Create Guild</h1>
     </div>
 
     <div class="form-wraper">
         <form [formGroup]="addGuild">
             <mat-form-field appearance="fill">
-                <input matInput placeholder="Guild Name" formControlName="guildName" />
+                <input appFocus matInput placeholder="Guild Name" formControlName="guildName" />
                 <mat-error *ngIf="this.guildName.invalid && this.guildName.touched">
-                    this field is mandatory
+                    This field is mandatory
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Account Name" formControlName="guildAcc" />
                 <mat-error *ngIf="this.guildAcc.invalid && this.guildAcc.touched">
-                    this field is mandatory
+                    This field is mandatory
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="fill">
                 <input matInput placeholder="Password" formControlName="guildPass" />
                 <mat-error *ngIf="this.guildPass.invalid && this.guildPass.touched">
-                    this field is mandatory
+                    This field is mandatory
                 </mat-error>
             </mat-form-field>
 
-            <section>
-                <mat-radio-group aria-label="Select an option">
-                    <mat-radio-button (change)="setFraction('horde')" value="1" 
-                    [checked]="this.addGuild.get('guildFraction').value === 'horde'">Horde</mat-radio-button>
-                    <mat-radio-button (change)="setFraction('aliance')" value="2"
-                    [checked]="this.addGuild.get('guildFraction').value === 'aliance'">Aliance</mat-radio-button>
-                </mat-radio-group>
-            </section>  
-
-            <button (click)="createGuildInfo()" [disabled]="addGuild.invalid">Submit</button>
-
+            <button class="submit-button" (click)="createGuildInfo()" [disabled]="addGuild.invalid">Submit</button>
         </form>
     </div>
 </div>

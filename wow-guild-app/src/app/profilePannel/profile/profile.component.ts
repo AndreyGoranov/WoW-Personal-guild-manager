@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit {
   userChampions: Array<Champion> = [];
   initialChampion: Champion;
   
-// fix when created new champ to be selected  only  first login always start with first champ (rxjs i guess ^^ :D)
   ngOnInit(): void {
     this.userId = firebase.auth().currentUser.uid;
     firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => this.getChampions(snap.val()).catch(err => {

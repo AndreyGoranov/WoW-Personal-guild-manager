@@ -1,10 +1,11 @@
 <div class="wraper">
+    <h1 class="heading">Create Champion</h1>
     <div class="form-wraper">
 
         <form [formGroup]="addChampion">
             <!-- NAME -->
                 <mat-form-field appearance="fill">
-                    <input matInput placeholder="Name" formControlName="name">
+                    <input matInput placeholder="Name" formControlName="name" appFocus>
                     <mat-error *ngIf="this.name.invalid && this.name.touched">
                         Please use only letters (2-12 length).
                     </mat-error>
@@ -34,12 +35,12 @@
                 <!-- SPEC -->
                 <section *ngIf="champClass.value">
                     <div>What's the spec of your {{champClass.value}} ?</div>
-                    <mat-checkbox class="spec-checkbox"  *ngFor="let spec of specs[champClass.value | lowercase]"
-                        [checked]="this.addChampion.get('spec').value === spec"
-                        [disabled]="this.checkedSpec[spec]"
-                        (change)="getSelectedSpec($event, spec, champClass.value)">
-                        {{spec}}
-                    </mat-checkbox>
+                    <mat-radio-group *ngFor="let spec of specs[champClass.value | lowercase]">
+                        <mat-radio-button class="spec-button" value="spec" (change)="getSelectedSpec(spec)">
+                            {{spec}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    
                 </section>
                 <!-- LEVEL -->
                 <mat-input-field appearance="fill" *ngIf="champClass.value" class="level-input-wraper">

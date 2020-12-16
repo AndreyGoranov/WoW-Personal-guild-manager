@@ -19,8 +19,7 @@ import { SelectChampionService } from 'src/app/services/select-champion.service'
 })
 
 export class AddChampionComponent implements OnInit {
-  courses: any;
-  
+
   constructor(private fb: FormBuilder,
     private db: AngularFireDatabase,
     private dataTransfer: DataTransferService,
@@ -31,9 +30,6 @@ export class AddChampionComponent implements OnInit {
   relations = relations;
   races = Object.keys(relations);
   specs: object = specs; 
-  checkedSpec = {};
-  male = true;
-  female = false;
   primaryProfessions = primaryProfessions;
   secondaryProfessions = secondaryProfessions;
   primaryPanelOpenState = false;
@@ -41,7 +37,6 @@ export class AddChampionComponent implements OnInit {
   checkedPrimaryProfessions = {};
   checkedSecondaryProfessions = {};
   professionCounter = 0;
-  tests: AngularFireList<string>;
   itemToEdit: Champion;
   champId: string;
   userId: string;
@@ -132,7 +127,7 @@ export class AddChampionComponent implements OnInit {
       this.selectChampionService.selectedChampion.next(currentChamp);
       this.router.navigateByUrl('entrance');
     } else {
-      alert('Something went wrong :( Plese try again and excuse us for the trouble :)');
+      alert('Something went wrong. Plese try again !');
     }
     
   }
@@ -171,27 +166,8 @@ export class AddChampionComponent implements OnInit {
     this.addChampion.get('gender').patchValue(gender);
   }
 
-  getSelectedSpec(event, name, champClass) {
-    console.log(event.checked);
-    if (event.checked) {
-      this.specs[champClass.toLowerCase()].forEach(element => {
-        if (name !== element) {
-          this.checkedSpec[element] = true;
-        } else {
-          this.checkedSpec[element] = false;
-          this.addChampion.get('spec').patchValue(name);
-          console.log(this.addChampion.get('spec').value);
-        }
-      });
-    } else {
-      this.addChampion.get('spec').patchValue('');
-      console.log(this.addChampion.get('spec').value);
-      this.specs[champClass.toLowerCase()].forEach(element => {
-        this.checkedSpec[element] = false;
-      })
-    }
-
-    console.log(this.checkedSpec)
+  getSelectedSpec(spec: string) {
+    this.addChampion.get('spec').patchValue(spec);
   }
 
   getSelectedProfessions(event, name, professionsArray) { 

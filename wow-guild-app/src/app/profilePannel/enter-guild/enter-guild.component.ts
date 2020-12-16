@@ -18,11 +18,13 @@ export class EnterGuildComponent implements OnInit {
   enteringChampId: string;
   userId: string;
   guildId: string;
+  guildFraction: string;
 
   ngOnInit(): void {
     this.enteringChampId = this.dataService.champId;
     console.log(this.enteringChampId, 'enter id ot serice');
     this.userId = firebase.auth().currentUser.uid;
+    // checking if already has a guild enter directly
     firebase.database().ref('champions').child(this.enteringChampId).child('guild').once('value', snap => {
       let guildId: string = snap.val();
       console.log(guildId);this.setGuildId(guildId);
@@ -30,7 +32,7 @@ export class EnterGuildComponent implements OnInit {
         this.setGuildId(guildId);
         return this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
       }
-    })
+    });
     this.enterGuild = this.fb.group({
       guildAcc: ['', [Validators.required]],
       guildPass: ['', [Validators.required]]
@@ -64,7 +66,7 @@ export class EnterGuildComponent implements OnInit {
         console.log('pass', pass);
         if (passToMatch === pass) {
           data.forEach(snap => {
-            this.guildId = snap.key
+            this.guildId = snap.key;
             let guild = {'guild': this.guildId}
             let champStatus = {};
             champStatus[this.enteringChampId] = 'member'
