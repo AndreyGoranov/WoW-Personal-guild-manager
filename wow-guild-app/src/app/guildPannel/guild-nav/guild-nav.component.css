@@ -31,7 +31,7 @@
 .burger {
   background: inherit;
   border: none;
-  outline: none; 
+  outline: none;
 }
 @media (min-width: 592px) {
     .sidenav {

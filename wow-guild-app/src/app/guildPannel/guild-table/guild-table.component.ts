@@ -1,4 +1,5 @@
 import { DataTransferService } from './../../services/data-transfer.service';
+import { PresenceService } from './../../services/presence.service';
 import { Champion } from './../../interfaces/champion-interface';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
@@ -27,7 +28,7 @@ export class GuildTableComponent implements OnInit {
   userId: string;
   @ViewChild('dt') table: Table;
 
-  constructor(private dataService: DataTransferService) { }
+  constructor(private dataService: DataTransferService, private presence: PresenceService) { }
 
   ngOnInit() {
     this.userId = firebase.auth().currentUser.uid;
@@ -37,6 +38,8 @@ export class GuildTableComponent implements OnInit {
         console.log(snapshot.val());
         let champs = snapshot.val();
         for (let champ in champs) {
+            champs[champ].status = this.presence.getPresence(champs[champ].userId);
+            console.log(champs[champ], 'predi push');
             this.champions.push(champs[champ]);
         }
       })

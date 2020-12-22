@@ -41,10 +41,14 @@ export class AddChampionComponent implements OnInit {
   champId: string;
   userId: string;
   addChampion: FormGroup;
+  shouldEdit = false;
+  latestChamp: Champion;
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     this.userId = firebase.auth().currentUser.uid;
-    if (this.dataTransfer.champId) {
+    if (this.dataTransfer.editing) {
+      this.shouldEdit = true;
+      this.dataTransfer.editing = false;
       this.champId = this.dataTransfer.champId;
       this.dataTransfer.champId = '';
       console.log('champId ot service', this.champId);
@@ -74,10 +78,8 @@ export class AddChampionComponent implements OnInit {
             this.secondaryProfs.get(prof).setValidators(Validators.max(300));
           }
         }) 
-      )
-        
-    }
-
+      )    
+    } else {
       this.addChampion = this.fb.group({
         name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(12), Validators.pattern(nameVerification)]],
         race: ['', [Validators.required]],
@@ -94,47 +96,51 @@ export class AddChampionComponent implements OnInit {
         // maby add like additional pannel for showing Champs of different roles  like picutre with info 
         // add voting system to navbar
       })
+    }
     
   }
 
   handleChampion() {
-    let currentChamp: Champion;
     let succesfullOperation = true;
-    if (this.champId) {
+    if (this.shouldEdit) {
       const champData: Champion = this.addChampion.value;
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
+      this.latestChamp = champData;
       firebase.database().ref(`champions`).child(this.champId).update(champData).catch(err => {
         if(err) {
           succesfullOperation = false;
         }
         console.log(err);
       });
-      currentChamp = champData;
-      this.champId = '';
     } else {
       const champData: Champion = this.addChampion.value;
+      champData.name = champData.name[0].toUpperCase() + champData.name.slice(1).toLowerCase();
       champData['userId'] = this.userId;
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
-      this.db.list('champions').push(champData).catch(err => {
-        if(err) {
-          succesfullOperation = false;
+      this.latestChamp = champData;
+      this.db.list('champions').push(champData).then(snap => {
+        this.latestChamp.id = snap.key;
+      }).catch(err => {
+        if (err) {
+          alert(err);
         }
-        console.log(err);
       });
-      currentChamp = champData;
     }
     if (succesfullOperation) {
-      this.selectChampionService.selectedChampion.next(currentChamp);
       this.router.navigateByUrl('entrance');
     } else {
       alert('Something went wrong. Plese try again !');
     }
-    
+  
   }
 
   async getChampionToEdit(data) {
     console.log('in async', data);
     return this.itemToEdit = data;
+  }
+
+  getNewChampInfo(info: Champion) {
+    return info
   }
 
 

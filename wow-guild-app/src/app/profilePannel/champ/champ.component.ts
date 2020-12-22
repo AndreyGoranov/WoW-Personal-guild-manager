@@ -27,31 +27,35 @@ import { trigger, state, style, transition, animate, useAnimation, animation, ke
   ]
 })
 
-export class ChampComponent implements OnInit {
+export class ChampComponent implements OnChanges {
 
   constructor(private selectChampionService: SelectChampionService,
     public dataTransfer: DataTransferService,
     private router: Router,
     private dialogService: ConfirmationDialogService) { }
-
-  @Input() initialChampion: Champion;  
+  
+  @Input() initialChampion: Champion;
+  @Input() selectedChampion: Champion;  
   racePictureSelector = racePictureSelect;
-  selectedChampion: Champion;
+  latestChampion: Champion;
 
-  ngOnInit(): void {
-    console.log(this.initialChampion, 'init champ');
-    this.selectChampionService.selectedChampion.subscribe(champ => {
-      console.log(champ, 'in champ component')
-      if (champ) {
-        this.selectedChampion = champ;
-      } else {
-        this.selectedChampion = this.initialChampion;
-      }
-    })
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnChanges v champ');
+    console.log(changes.selectedChampion, 'changes predi proverkite');
+    if (this.selectedChampion) {
+      console.log(this.selectedChampion, 'ima selected');
+      this.selectedChampion = changes.selectedChampion.currentValue;
+      console.log(this.selectedChampion ,'selectvame current change');
+    } else {
+      console.log(this.initialChampion,'nqma selected');
+      this.selectedChampion = this.initialChampion;
+    }
+    
   }
 
   editChampion(id: string) {
-    console.log('id v edit predi rout', id);
+    console.log(id, 'id kato cucknem edit');
+    this.dataTransfer.editing = true;
     this.dataTransfer.champId = id;
     this.router.navigateByUrl('add-champion');
   }
@@ -69,16 +73,8 @@ export class ChampComponent implements OnInit {
         firebase.database().ref(`champions`).child(id).remove().catch(err => {
           console.log(err);
         });
-        this.selectChampionService.selectedChampion.next(this.initialChampion);
       }
     });
-  }
-
-  enterGuild(id:string, name: string) {
-    console.log('id v profile predi enter guild', id);
-    this.dataTransfer.champId = id;
-    this.dataTransfer.champName = name;
-    this.router.navigateByUrl('enter-guild');
   }
 
   createGuild(id:string) {

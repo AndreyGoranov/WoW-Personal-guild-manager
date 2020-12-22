@@ -24,7 +24,7 @@
             />
         </div>
 
-        <div class="list-and-info-wrap">
+        <div *ngIf="userChampions.length > 0" class="list-and-info-wrap">
             <div class="champ-list">
                 <div *ngFor="let champ of this.userChampions" class="list-item">
                     <h3 (click)="selectChampion(champ)" class="list-item">{{champ.name}}</h3>
@@ -32,9 +32,11 @@
             </div>
        
             <div class="champ-info">
-                <app-champ *ngIf="initialChampion" [initialChampion]="initialChampion"></app-champ>
+                <app-champ *ngIf="initialChampion" [selectedChampion]="selectedChampion" [initialChampion]="initialChampion"></app-champ>
             </div>
         </div>
+
+        <h1 *ngIf="userChampions.length === 0">Make your first champion!</h1>
         
     </div>
         

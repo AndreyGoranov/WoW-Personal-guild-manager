@@ -1,4 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,5 +12,7 @@ export class DataTransferService {
   guildId: string;
   champName: string;
   champRace: string;
+  editing = false;
+  latestChamp = null;
 
 }

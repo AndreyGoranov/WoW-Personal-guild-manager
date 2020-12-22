@@ -94,11 +94,22 @@
         align-items: center;
     }
 
-    .heading-container h1 {
-        margin-left: 45%;
-        margin-right: auto;
+    @media all and (min-width: 570px) {
+        .heading-container h1 {
+            margin-left: 45%;
+            margin-right: auto;
+        }
     }
 
+    @media all and (max-width: 568px) {
+        .heading-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+    
     .ui-datepicker {
         min-width: 25em;
     

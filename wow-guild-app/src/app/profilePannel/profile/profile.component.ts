@@ -18,68 +18,77 @@ import { SelectChampionService } from 'src/app/services/select-champion.service'
 })
 export class ProfileComponent implements OnInit {
 
-  constructor(private dataTransfer: DataTransferService,
+  constructor(public dataTransfer: DataTransferService,
     public router: Router,
     private dialogService: ConfirmationDialogService,
     private selectChampionService: SelectChampionService) { }
 
-  img: File = null;
-  imgURL: any;
-  message: string;
-  email:string;
+  // img: File = null;
+  // imgURL: any;
+  // message: string;
+  // email:string;
   racePictureSelector = racePictureSelect;
-  dbRefObject;
   userId: string;
   userChampions: Array<Champion> = [];
   initialChampion: Champion;
+  selectedChampion: Champion;
   
   ngOnInit(): void {
+    console.log('loading champs');
     this.userId = firebase.auth().currentUser.uid;
-    firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => this.getChampions(snap.val()).catch(err => {
-      console.log(err);
-    }));
+    this.getChampions();
   }
 
-  async getChampions(data) {
-    let first = true;
+   getChampions() {
+      firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => 
+      this.handleChampions(snap.val()).then(val => {
+        if (this.initialChampion) {
+          this.selectedChampion = val;
+        } else {
+          this.initialChampion = this.userChampions[0];
+        }
+        console.log(val, 'value ot then na handle ');
+      }));
+  }
+  
+  async handleChampions(data) {
+    console.log('getting data');
     this.userChampions = [];
     for(let id in data) {
-      if (first) {
-        this.initialChampion = data[id];
-        first = false;
-      }
       let currentChampion: Champion = data[id];
       currentChampion.id = id;
       this.userChampions.push(currentChampion);
     }
+    console.log(this.initialChampion, 'init champ predi return na handle');   
+    return this.userChampions[this.userChampions.length - 1];
   }
 
   selectChampion(champ: Champion) {
-    this.selectChampionService.selectedChampion.next(champ);
+   this.selectedChampion = champ;
   }
 
-  onFileSelected(event) {
-    this.img = event.target.files[0];
-    this.preview(this.img);
-    // Upload to database
-  }
+  // onFileSelected(event) {
+  //   this.img = event.target.files[0];
+  //   this.preview(this.img);
+  //   // Upload to database
+  // }
 
-  preview(img: File) {
-    if (!img) {
-       return;
-    }
+  // preview(img: File) {
+  //   if (!img) {
+  //      return;
+  //   }
      
-    let mimeType = img.type;
-    if (mimeType.match(/image\/*/) == null) {
-      this.message = "Only images are supported.";
-      return;
-    }
+  //   let mimeType = img.type;
+  //   if (mimeType.match(/image\/*/) == null) {
+  //     this.message = "Only images are supported.";
+  //     return;
+  //   }
 
-    const reader = new FileReader();
-    reader.readAsDataURL(img); 
-    reader.onload = (_event) => { 
-      this.imgURL = reader.result;
-    }
-  }
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(img); 
+  //   reader.onload = (_event) => { 
+  //     this.imgURL = reader.result;
+  //   }
+  // }
 
 }

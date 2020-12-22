@@ -38,7 +38,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { ChampComponent } from './profilePannel/champ/champ.component';
 import { FocusDirective } from './directives/focus.directive';
-
+import { DataTransferService } from './services/data-transfer.service';
+import { SelectChampionService } from './services/select-champion.service';
+import { RouterModule } from '@angular/router';
 
 firebase.initializeApp(environment.firebase);
 // firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION);
@@ -60,6 +62,7 @@ firebase.initializeApp(environment.firebase);
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    RouterModule,
     FormsModule,
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     ReactiveFormsModule,
@@ -87,7 +90,7 @@ firebase.initializeApp(environment.firebase);
     
   ],
   exports: [GuildCalendar],
-  providers: [],
+  providers: [DataTransferService, SelectChampionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

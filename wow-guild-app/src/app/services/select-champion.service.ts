@@ -9,5 +9,5 @@ import { Champion } from '../interfaces/champion-interface';
 export class SelectChampionService {
 
   constructor() { }
-  selectedChampion = new BehaviorSubject(undefined);
+  selectedChampion = new BehaviorSubject(null);
 }

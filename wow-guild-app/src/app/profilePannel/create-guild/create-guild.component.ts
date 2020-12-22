@@ -1,10 +1,10 @@
 import { DataTransferService } from 'src/app/services/data-transfer.service';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as firebase from "firebase/app";
 import { detectFraction } from 'src/app/utilities/constants/fraction-detect';
 import { nameVerification } from 'src/app/utilities/constants/nameRegex';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { nameVerification } from 'src/app/utilities/constants/nameRegex';
 })
 export class CreateGuildComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private dataTransfer: DataTransferService) { }
+  constructor(private fb: FormBuilder, private dataTransfer: DataTransferService, private router: Router) { }
 
   addGuild: FormGroup;
   guildCreatorId: string;
@@ -46,12 +46,15 @@ export class CreateGuildComponent implements OnInit {
     this.guildInfo.members[this.guildCreatorId] = "GuildMaster";
     firebase.database().ref('guilds').push(this.guildInfo).once('value', snap => {
       name = snap.key;
-      console.log(name);  
     }).catch(err => {
+      alert(err);
       console.log(err);
     });
     let guild = {'guild' : name}
-    firebase.database().ref('champions').child(this.guildCreatorId).update(guild);
+    firebase.database().ref('champions').child(this.guildCreatorId).update(guild).then(() => {
+      this.dataTransfer.guildId = name;
+      return this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
+    });
   }
 
   get guildName() {

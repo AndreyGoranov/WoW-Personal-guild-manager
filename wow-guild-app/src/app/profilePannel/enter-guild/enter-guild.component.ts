@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import * as firebase from "firebase/app";
+import { SelectChampionService } from 'src/app/services/select-champion.service';
 
 @Component({
   selector: 'app-enter-guild',
@@ -12,7 +13,8 @@ import * as firebase from "firebase/app";
 })
 export class EnterGuildComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private router: Router, private dataService: DataTransferService) { }
+  constructor(private fb: FormBuilder, private db: AngularFireDatabase, private router: Router,
+     private dataService: DataTransferService, public selectedChampionService: SelectChampionService) { }
 
   enterGuild: FormGroup;
   enteringChampId: string;
@@ -21,18 +23,22 @@ export class EnterGuildComponent implements OnInit {
   guildFraction: string;
 
   ngOnInit(): void {
-    this.enteringChampId = this.dataService.champId;
-    console.log(this.enteringChampId, 'enter id ot serice');
+    this.selectedChampionService.selectedChampion.subscribe(champ => {
+      this.enteringChampId = champ.id;
+    })
+    console.log(this.enteringChampId, 'enter id ot service');
     this.userId = firebase.auth().currentUser.uid;
     // checking if already has a guild enter directly
-    firebase.database().ref('champions').child(this.enteringChampId).child('guild').once('value', snap => {
-      let guildId: string = snap.val();
-      console.log(guildId);this.setGuildId(guildId);
-      if (guildId) {
-        this.setGuildId(guildId);
-        return this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
-      }
-    });
+    if(this.enteringChampId) {
+      firebase.database().ref('champions').child(this.enteringChampId).child('guild').once('value', snap => {
+        let guildId: string = snap.val();
+        if (guildId) {
+          this.setGuildId(guildId);
+          return this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
+        }
+      });
+    }
+    
     this.enterGuild = this.fb.group({
       guildAcc: ['', [Validators.required]],
       guildPass: ['', [Validators.required]]
@@ -69,13 +75,16 @@ export class EnterGuildComponent implements OnInit {
             this.guildId = snap.key;
             let guild = {'guild': this.guildId}
             let champStatus = {};
-            champStatus[this.enteringChampId] = 'member'
+            let champStatusInfo = {};
+            champStatusInfo[this.enteringChampId] = 'member';
+            champStatusInfo['status'] = 'online';
+            champStatusInfo['timestamp'] = 'init';
             firebase.database().ref('guilds').child(this.guildId).child('members').update(champStatus);
             firebase.database().ref('champions').child(this.enteringChampId).update(guild);                                                                                                                                 
             console.log(this.guildId, 'key');
             this.setGuildId(this.guildId);
           });
-          this.router.navigate(['guild/g',{ outlets: { "guild": [ "table"] } }]);
+          this.router.navigate(['guild/g',{ outlets: { "guild": [ "table" ] } }]);
         }
       }
     });

@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
         console.log('user logged in ');
-        console.log(user);
+        console.log(user);  
         this.succesfulLogin(user);
       } else {
         console.log('user logged out');
