@@ -43,6 +43,7 @@ export class AddChampionComponent implements OnInit {
   addChampion: FormGroup;
   shouldEdit = false;
   latestChamp: Champion;
+  editedChamp: Champion;
 
   ngOnInit(): void { 
     this.userId = firebase.auth().currentUser.uid;
@@ -104,8 +105,10 @@ export class AddChampionComponent implements OnInit {
     let succesfullOperation = true;
     if (this.shouldEdit) {
       const champData: Champion = this.addChampion.value;
+      champData.name = champData.name[0].toUpperCase() + champData.name.slice(1).toLowerCase();
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
-      this.latestChamp = champData;
+      champData.id = this.champId;
+      this.editedChamp = champData;
       firebase.database().ref(`champions`).child(this.champId).update(champData).catch(err => {
         if(err) {
           succesfullOperation = false;
@@ -118,15 +121,19 @@ export class AddChampionComponent implements OnInit {
       champData['userId'] = this.userId;
       champData.role = this.roleDetermination(this.addChampion.get('spec').value);
       this.latestChamp = champData;
-      this.db.list('champions').push(champData).then(snap => {
-        this.latestChamp.id = snap.key;
-      }).catch(err => {
+      this.db.list('champions').push(champData).catch(err => {
         if (err) {
           alert(err);
         }
       });
     }
     if (succesfullOperation) {
+      if (this.shouldEdit) {
+        sessionStorage.setItem('justEdited', 'yes');
+        sessionStorage.setItem('editedChampion', JSON.stringify(this.editedChamp));
+      } else {
+        sessionStorage.setItem('isNew', 'yes');
+      }
       this.router.navigateByUrl('entrance');
     } else {
       alert('Something went wrong. Plese try again !');
@@ -212,6 +219,10 @@ export class AddChampionComponent implements OnInit {
       role = 'Dps'
     }
     return role
+  }
+
+  cancelOperation() {
+    this.router.navigateByUrl('entrance');
   }
 
 }  

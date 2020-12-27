@@ -34,23 +34,15 @@ export class ChampComponent implements OnChanges {
     private router: Router,
     private dialogService: ConfirmationDialogService) { }
   
-  @Input() initialChampion: Champion;
   @Input() selectedChampion: Champion;  
   racePictureSelector = racePictureSelect;
+  previousChampion: Champion;
   latestChampion: Champion;
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnChanges v champ');
-    console.log(changes.selectedChampion, 'changes predi proverkite');
-    if (this.selectedChampion) {
-      console.log(this.selectedChampion, 'ima selected');
-      this.selectedChampion = changes.selectedChampion.currentValue;
-      console.log(this.selectedChampion ,'selectvame current change');
-    } else {
-      console.log(this.initialChampion,'nqma selected');
-      this.selectedChampion = this.initialChampion;
-    }
-    
+    console.log(changes.selectedChampion);
+    this.previousChampion = changes.selectedChampion.previousValue;
+    this.selectedChampion = changes.selectedChampion.currentValue;
   }
 
   editChampion(id: string) {
@@ -73,6 +65,7 @@ export class ChampComponent implements OnChanges {
         firebase.database().ref(`champions`).child(id).remove().catch(err => {
           console.log(err);
         });
+        this.selectedChampion = this.previousChampion;
       }
     });
   }
@@ -103,6 +96,11 @@ export class ChampComponent implements OnChanges {
         this.router.navigateByUrl('guild-profile');
       }
     });
+  }
+
+  enterGuild(id: string) {
+    this.dataTransfer.champId = id;
+    this.router.navigateByUrl('enter-guild');
   }
 
 }

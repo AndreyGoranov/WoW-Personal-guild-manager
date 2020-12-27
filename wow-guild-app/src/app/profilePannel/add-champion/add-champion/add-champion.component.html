@@ -119,7 +119,8 @@
                     </div>
                     
                 </mat-expansion-panel>
-                <button type="button" class="mt-5 submit-button" (click)="handleChampion()"  [disabled]="addChampion.invalid">Create</button>
+                <button type="button" class="mt-5 submit-button" (click)="handleChampion()" [disabled]="addChampion.invalid">Save</button>
+                <button type="button" class="mt-5 submit-button" (click)="cancelOperation()">Cancel</button>
                 <!-- DONT FORGET TO VALIDATE  FOR SELECTE SPEC  required-->
                 <!-- <button mat-stroked-button class="submit-button" [disabled]="regForm.invalid" (click)="submitForm()">Submit</button> -->
             </form>

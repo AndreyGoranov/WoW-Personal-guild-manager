@@ -2,7 +2,7 @@ import { DataTransferService } from './../../services/data-transfer.service';
 import { Router } from '@angular/router';
 import { racePictureSelect } from './../../utilities/constants/picture-selectors';
 import { Champion } from './../../interfaces/champion-interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import * as firebase from "firebase/app";
 import { ConfirmationDialogService } from 'src/app/shared/confirm-dialog/confirmation-dialog.service';
 import { SelectChampionService } from 'src/app/services/select-champion.service';
@@ -30,8 +30,8 @@ export class ProfileComponent implements OnInit {
   racePictureSelector = racePictureSelect;
   userId: string;
   userChampions: Array<Champion> = [];
-  initialChampion: Champion;
   selectedChampion: Champion;
+  backed = false;
   
   ngOnInit(): void {
     console.log('loading champs');
@@ -42,29 +42,35 @@ export class ProfileComponent implements OnInit {
    getChampions() {
       firebase.database().ref('champions').orderByChild('userId').equalTo(this.userId).on('value', snap => 
       this.handleChampions(snap.val()).then(val => {
-        if (this.initialChampion) {
+        const firstInit = sessionStorage.getItem('init');
+        if (firstInit === 'no' && sessionStorage.getItem('isNew') === 'yes') {
           this.selectedChampion = val;
+        } else if (firstInit === 'no' && sessionStorage.getItem('justEdited') === 'yes') {
+          this.selectedChampion = JSON.parse(sessionStorage.getItem('editedChampion'));
+        } else if (firstInit === 'no') {
+          this.selectedChampion = JSON.parse(sessionStorage.getItem('selectedChampion'));
         } else {
-          this.initialChampion = this.userChampions[0];
+          this.selectedChampion = this.userChampions[0];
+          sessionStorage.setItem('init', 'no');
         }
-        console.log(val, 'value ot then na handle ');
       }));
   }
   
   async handleChampions(data) {
     console.log('getting data');
+    console.log(data);
     this.userChampions = [];
     for(let id in data) {
       let currentChampion: Champion = data[id];
       currentChampion.id = id;
       this.userChampions.push(currentChampion);
-    }
-    console.log(this.initialChampion, 'init champ predi return na handle');   
+    } 
     return this.userChampions[this.userChampions.length - 1];
   }
 
   selectChampion(champ: Champion) {
    this.selectedChampion = champ;
+   sessionStorage.setItem('selectedChampion', JSON.stringify(champ));
   }
 
   // onFileSelected(event) {

@@ -23,10 +23,8 @@ export class EnterGuildComponent implements OnInit {
   guildFraction: string;
 
   ngOnInit(): void {
-    this.selectedChampionService.selectedChampion.subscribe(champ => {
-      this.enteringChampId = champ.id;
-    })
-    console.log(this.enteringChampId, 'enter id ot service');
+    this.enteringChampId = this.dataService.champId;
+    console.log(this.enteringChampId, 'enter id');
     this.userId = firebase.auth().currentUser.uid;
     // checking if already has a guild enter directly
     if(this.enteringChampId) {
